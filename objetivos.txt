@@ -1,0 +1,5 @@
+Objetivo Principal
+
+El objetivo principal de este proyecto es desarrollar una aplicación web que permita a los usuarios gestionar de manera eficiente sus gastos personales, organizándolos por etiquetas y proporcionando herramientas visuales para analizar sus hábitos de consumo. Esto incluye funciones de registro y login para garantizar la privacidad de los datos y una experiencia personalizada para cada usuario.
+
+La aplicación facilitará la toma de decisiones financieras mediante gráficos y resúmenes mensuales, ayudando a identificar patrones de gasto en categorías como "ocio" y "primera necesidad". A largo plazo, busca integrar opciones de automatización, como la importación de gastos desde servicios externos como Google Pay, para una mayor comodidad del usuario.

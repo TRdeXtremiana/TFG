@@ -1,0 +1,38 @@
+Requisitos Funcionales
+- Funcionalidades que el sistema debe cumplir:
+    1. Registro y Login de Usuarios
+        - El usuario debe poder crear una cuenta mediante un formulario de registro con los campos: nombre,     email, y contraseña.
+        - El usuario debe poder iniciar sesión con su email y contraseña.
+        - El sistema debe validar los datos de registro (email único) y permitir la recuperación de la  contraseña si - El usuario la olvida.
+
+    2. Gestión de Gastos
+        - El usuario podrá ingresar gastos personales con los siguientes detalles:
+            * Monto del gasto.
+            * Fecha del gasto.
+            * Descripción opcional.
+            * Etiqueta asociada (por ejemplo, "ocio", "alimentación", "transporte").
+        - El usuario podrá editar o eliminar los gastos que haya ingresado previamente.
+        - El usuario podrá clasificar cada gasto con etiquetas predefinidas o personalizadas.
+
+    3. Clasificación por Etiquetas
+        - El sistema debe permitir la creación de etiquetas personalizadas.
+        - Las etiquetas predefinidas incluirán categorías como: "ocio", "alimentación", "primera necesidad",    etc.
+        - El usuario podrá asignar un gasto a una etiqueta al momento de ingresarlo.
+
+    4. Visualización de Resúmenes Mensuales
+        - El usuario podrá acceder a un resumen mensual de sus gastos.
+        -Se debe mostrar un gráfico que represente los gastos por categorías (etiquetas) durante El mes, permitiendo ver qué porcentaje del gasto total corresponde a cada categoría.
+        - El resumen debe incluir la opción de filtrar por fecha o por etiqueta.
+
+    5. Almacenamiento de Gastos en la Base de Datos
+        - Todos los gastos ingresados deben ser almacenados en la base de datos.
+        - La base de datos debe guardar información sobre cada usuario, incluyendo sus gastos y las etiquetas asociadas.
+        - Seguridad y Protección de Datos
+
+    6. Seguridad y Protección de Datos
+        - Las contraseñas deben ser almacenadas de forma segura (con hash).
+        - El acceso a los datos d- El usuario debe ser restringido mediante autenticación (login).
+
+    7. Interfaz de Usuario
+        - El sistema debe permitir a los usuarios navegar entre las diferentes secciones de forma sencilla (registro, login, ingreso de gastos, visualización de gráficos).
+        - La aplicación debe ser responsive y funcionar bien en dispositivos móviles y de escritorio.

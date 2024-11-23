@@ -1,0 +1,34 @@
+Requisitos No Funcionales
+- Cómo debe comportarse el sistema, pero no están directamente relacionados con las funcionalidades específicas. Rendimiento, seguridad y usabilidad.
+
+    1. Seguridad
+        - La aplicación debe proteger los datos personales y financieros de los usuarios.
+        - Las contraseñas deben estar cifradas y la información sensible debe ser protegida adecuadamente.
+        - Se debe implementar un sistema de protección contra ataques comunes como inyecciones SQL y ataques de cross-site scripting (XSS).
+    
+    2. Rendimiento
+        - La aplicación debe cargar rápidamente y permitir a los usuarios interactuar sin demoras significativas, incluso si tienen un historial de gastos extenso.
+        - Los gráficos deben generarse de manera eficiente, incluso con grandes cantidades de datos.
+
+    3. Escalabilidad
+        - La aplicación debe ser capaz de manejar un número creciente de usuarios y gastos sin perder rendimiento.
+        - La base de datos debe estar estructurada de manera que permita añadir nuevas funcionalidades sin necesidad de reestructurarla completamente.
+
+    4. Usabilidad
+        - La interfaz debe ser intuitiva y fácil de usar para que los usuarios, incluso sin experiencia técnica, puedan gestionar sus gastos sin problemas.
+        - La aplicación debe ser accesible, con una clara diferenciación de colores, fuentes legibles y soporte para usuarios con discapacidades (por ejemplo, modo oscuro).
+
+    5. Compatibilidad
+        - La aplicación debe ser compatible con los principales navegadores (Chrome, Firefox, Safari, Edge).
+        - Debe ser funcional en dispositivos móviles y tabletas, garantizando una experiencia de usuario consistente.
+
+    6. Mantenimiento
+        - El código debe estar bien documentado y organizado, permitiendo que futuros desarrolladores puedan agregar o modificar funcionalidades de forma sencilla.
+        - El sistema debe ser fácil de mantener a largo plazo, permitiendo agregar características como la integración con servicios de pagos externos (por ejemplo, Google Pay).
+
+    7. Disponibilidad
+        - El sistema debe estar disponible el 99% del tiempo, con tiempos de inactividad mínimos para mantenimiento.
+        - El sistema debe poder manejar varios usuarios al mismo tiempo sin afectar la funcionalidad o el rendimiento.
+        
+    8. Respaldo de Datos
+        - Se deben realizar copias de seguridad periódicas de los datos de los usuarios y los gastos almacenados para evitar pérdidas en caso de fallos del sistema.
