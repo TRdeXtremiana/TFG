@@ -1,27 +1,28 @@
--- Crear la tabla de usuarios
+-- Tabla de usuarios
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,               -- ID único del usuario
+    id INT AUTO_INCREMENT PRIMARY KEY,                -- ID único del usuario
     name VARCHAR(100) NOT NULL,                       -- Nombre del usuario
     email VARCHAR(100) UNIQUE NOT NULL,               -- Email único del usuario
     password VARCHAR(255) NOT NULL                    -- Contraseña cifrada del usuario
 );
 
--- Crear la tabla de categorías (etiquetas)
+-- Tabla de etiquetas
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,               -- ID único de la categoría
-    name VARCHAR(100) UNIQUE NOT NULL,                -- Nombre de la categoría (ej. 'ocio', 'alimentación')
+    name VARCHAR(100) UNIQUE NOT NULL,               -- Categoría (ej. 'ocio', 'alimentación')
     description VARCHAR(255)                         -- Descripción opcional de la categoría
 );
 
--- Crear la tabla principal gestionGastos
+-- Tabla principal gestionGastos
 CREATE TABLE gestionGastos (
-    id INT AUTO_INCREMENT PRIMARY KEY,               -- Identificador único del gasto
+    id INT AUTO_INCREMENT PRIMARY KEY,                -- Identificador único del gasto
     user_id INT NOT NULL,                             -- ID del usuario (relación con la tabla users)
     amount DECIMAL(10, 2) NOT NULL,                   -- Monto del gasto
     description VARCHAR(255),                         -- Descripción del gasto
     expense_date DATE NOT NULL,                       -- Fecha del gasto
     category_id INT NOT NULL,                         -- ID de la categoría (relación con la tabla categories)
     confirmed BOOLEAN DEFAULT FALSE,                  -- Si el gasto ha sido confirmado
-    FOREIGN KEY (user_id) REFERENCES users(id),      -- Relación con la tabla users
+    
+    FOREIGN KEY (user_id) REFERENCES users(id),          -- Relación con la tabla users
     FOREIGN KEY (category_id) REFERENCES categories(id)  -- Relación con la tabla categories
 );
