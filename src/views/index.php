@@ -55,6 +55,8 @@ if (!isset($_SESSION['user_id'])) {
         <a href="?logout=true">Cerrar Sesión</a>
     </nav>
 
+    <!-- <h1>Hola, <?php echo $_SESSION['user_name']; ?></h1> -->
+
     <main>
         <section class="add-expense">
             <h2>Añadir Gasto</h2>
