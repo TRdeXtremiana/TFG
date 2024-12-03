@@ -25,4 +25,4 @@ CREATE TABLE gestionGastos (
     
     FOREIGN KEY (user_id) REFERENCES users(id),          -- Relación con la tabla users
     FOREIGN KEY (category_id) REFERENCES categories(id)  -- Relación con la tabla categories
-);
+); 
