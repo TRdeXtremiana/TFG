@@ -30,7 +30,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Gastos</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
-    <script src="../assets/js/scripts.js" defer></script>
+    <script src="../assets/JS/script.js" defer></script>
 </head>
 
 <body>
