@@ -1,5 +1,21 @@
 <?php
+// Iniciar sesión
 session_start();
+
+// Si el usuario intenta cerrar sesión
+if (isset($_GET['logout'])) {
+    // Borrar todas las variables de sesión
+    session_unset();
+
+    // Destruir la sesión
+    session_destroy();
+
+    // Redirigir al login
+    header('Location: login.php');
+    exit();
+}
+
+// Verificar si el usuario no está logueado, redirigir a login
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
@@ -14,7 +30,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Gastos</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
-    <script src="../assets/JS/script.js" defer></script>
+    <script src="../assets/js/scripts.js" defer></script>
 </head>
 
 <body>
@@ -26,7 +42,8 @@ if (!isset($_SESSION['user_id'])) {
         <nav id="desktop-menu">
             <a href="profile.php">Perfil</a>
             <a href="history.php">Historial</a>
-            <a href="../login.php">Cerrar Sesión</a>
+            <!-- Cerrar sesión -->
+            <a href="?logout=true">Cerrar Sesión</a>
         </nav>
     </header>
 
@@ -34,7 +51,8 @@ if (!isset($_SESSION['user_id'])) {
     <nav id="mobile-menu">
         <a href="profile.php">Perfil</a>
         <a href="history.php">Historial</a>
-        <a href="../login.php">Cerrar Sesión</a>
+        <!-- Cerrar sesión -->
+        <a href="?logout=true">Cerrar Sesión</a>
     </nav>
 
     <main>
