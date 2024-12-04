@@ -4,10 +4,12 @@ require_once '../backend/auth.php'; // Ruta al archivo con la lógica
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$nombre = htmlspecialchars($_POST['nombre']);
-	$email = htmlspecialchars($_POST['email']);
-	$password = $_POST['password'];
+	// Obtener y limpiar los datos del formulario
+	$nombre = htmlspecialchars($_POST['nombre'] ?? '');
+	$email = htmlspecialchars($_POST['email'] ?? '');
+	$password = $_POST['password'] ?? '';
 
+	// Intentar registrar al usuario
 	$resultado = registrarUsuario($nombre, $email, $password);
 	if ($resultado === true) {
 		// Guardar el nombre en la sesión y redirigir
@@ -32,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 	<div class="login-container">
+		<!-- Mostrar mensaje de error si existe -->
 		<?php if ($error): ?>
 			<p class="error"><?= htmlspecialchars($error) ?></p>
 		<?php endif; ?>

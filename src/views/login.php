@@ -11,16 +11,15 @@ $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	require_once '../backend/auth.php'; // Ruta al archivo backend
 
-	// Obtener datos del formulario
+	// Obtener y limpiar datos del formulario
 	$username = htmlspecialchars($_POST['username'] ?? '');
 	$password = $_POST['password'] ?? '';
 
 	// Validar el login
-	if (login($username, $password)) {
+	$error = login($username, $password) ? '' : 'Credenciales incorrectas.';
+	if (!$error) {
 		header('Location: index.php');
 		exit();
-	} else {
-		$error = 'Credenciales incorrectas.';
 	}
 }
 ?>
@@ -54,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<?php if ($error): ?>
 			<p class="error"><?= htmlspecialchars($error) ?></p>
 		<?php endif; ?>
-
 	</div>
 </body>
 
