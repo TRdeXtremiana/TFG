@@ -43,7 +43,7 @@ if (!isset($_SESSION['user_id'])) {
 <body>
 	<header>
 		<button id="menu-toggle" aria-label="Abrir menú">&#9776;</button> <!-- Icono de menú hamburguesa -->
-		<h1>Gestión de Gastos</h1>
+		<h1><a href="./index.php">Gestión de Gastos</a></h1>
 
 		<!-- Menú de navegación (visible solo en escritorio) -->
 		<nav id="desktop-menu">
