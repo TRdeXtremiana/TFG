@@ -1,21 +1,27 @@
 <?php
 session_start();
+
+// Redirigir al inicio si ya está logueado
 if (isset($_SESSION['user_id'])) {
-    header('Location: index.php');
-    exit();
+	header('Location: index.php');
+	exit();
 }
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    include '../backend/auth.php';
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    if (login($username, $password)) {
-        header('Location: index.php');
-        exit();
-    } else {
-        $error = 'Credenciales incorrectas.';
-    }
+	require_once '../backend/auth.php'; // Ruta al archivo backend
+
+	// Obtener datos del formulario
+	$username = htmlspecialchars($_POST['username'] ?? '');
+	$password = $_POST['password'] ?? '';
+
+	// Validar el login
+	if (login($username, $password)) {
+		header('Location: index.php');
+		exit();
+	} else {
+		$error = 'Credenciales incorrectas.';
+	}
 }
 ?>
 
@@ -23,30 +29,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="../assets/CSS/styles.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Iniciar Sesión</title>
+	<link rel="stylesheet" href="../assets/CSS/styles.css">
 </head>
 
 <body>
-    <div class="login-container">
-        <h1>Iniciar Sesión</h1>
+	<div class="login-container">
+		<h1 class="centrado">Iniciar Sesión</h1>
 
-        <?php if ($error): ?>
-        <p class="error"><?= htmlspecialchars($error) ?></p>
-        <?php endif; ?>
+		<form action="login.php" method="POST">
+			<label for="username">Usuario o Correo</label>
+			<input type="text" id="username" name="username">
 
-        <form action="login.php" method="POST">
-            <label for="username">Usuario</label>
-            <input type="text" id="username" name="username">
+			<label for="password">Contraseña</label>
+			<input type="password" id="password" name="password">
 
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password">
+			<button type="submit">Entrar</button>
+		</form>
 
-            <button type="submit">Entrar</button>
-        </form>
-    </div>
+		<p>¿No tienes cuenta? <a href="./registro.php">Regístrate</a></p>
+
+		<?php if ($error): ?>
+			<p class="error"><?= htmlspecialchars($error) ?></p>
+		<?php endif; ?>
+
+	</div>
 </body>
 
 </html>
