@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../backend/auth.php'; // Ruta al archivo con la lógica
+require_once '../backend/controllers/authController.php'; // Ruta al archivo con la lógica
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

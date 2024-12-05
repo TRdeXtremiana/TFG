@@ -9,7 +9,7 @@ if (isset($_SESSION['user_id'])) {
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	require_once '../backend/auth.php'; // Ruta al archivo backend
+	require_once __DIR__ . '/../backend/controllers/authController.php'; // Ruta corregida
 
 	// Obtener y limpiar datos del formulario
 	$username = htmlspecialchars($_POST['username'] ?? '');

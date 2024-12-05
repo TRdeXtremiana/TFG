@@ -4,7 +4,6 @@ Requisitos No Funcionales
     1. Seguridad
         - La aplicación debe proteger los datos personales y financieros de los usuarios.
         - Las contraseñas deben estar cifradas y la información sensible debe ser protegida adecuadamente.
-        - Se debe implementar un sistema de protección contra ataques comunes como inyecciones SQL y ataques de cross-site scripting (XSS).
     
     2. Rendimiento
         - La aplicación debe cargar rápidamente y permitir a los usuarios interactuar sin demoras significativas, incluso si tienen un historial de gastos extenso.

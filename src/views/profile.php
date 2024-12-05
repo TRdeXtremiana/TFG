@@ -1,41 +1,18 @@
 <?php
+// Incluir funciones comunes
+include('../backend/functions.php');
+
 // Iniciar sesión
 session_start();
 
 // Verificar si el usuario está intentando cerrar sesión
 if (isset($_GET['logout'])) {
-	// Borrar todas las variables de sesión y destruir la sesión
-	session_unset();
-	session_destroy();
-
-	// Redirigir al login
-	header('Location: login.php');
-	exit();
+	logout();
 }
 
 // Si el formulario ha sido enviado, guardar los datos en la sesión
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	if (isset($_POST['user_name'])) {
-		$_SESSION['user_name'] = htmlspecialchars($_POST['user_name']);
-	}
-
-	if (isset($_POST['description'])) {
-		$_SESSION['description'] = htmlspecialchars($_POST['description']);
-	}
-
-	if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
-		$allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
-		$file_extension = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
-		if (in_array($file_extension, $allowed_extensions)) {
-			// Subir imagen al servidor (en una carpeta 'uploads')
-			$upload_dir = 'uploads/';
-			$file_path = $upload_dir . basename($_FILES['profile_picture']['name']);
-			move_uploaded_file($_FILES['profile_picture']['tmp_name'], $file_path);
-			$_SESSION['profile_picture'] = $file_path;
-		} else {
-			$error_message = "Solo se permiten imágenes JPG, JPEG, PNG o GIF.";
-		}
-	}
+	handleProfileUpdate();
 }
 
 // Obtener la información del usuario desde la sesión
@@ -56,22 +33,8 @@ $profile_picture = $_SESSION['profile_picture'] ?? 'default-profile.png'; // Ima
 </head>
 
 <body>
-	<header>
-		<button id="menu-toggle" aria-label="Abrir menú">&#9776;</button>
-		<h1><a href="./index.php">Gestión de Gastos</a></h1>
-		<nav id="desktop-menu">
-
-			<a href="history.php">Historial</a>
-			<a href="?logout=true">Cerrar Sesión</a>
-		</nav>
-	</header>
-
-	<nav id="mobile-menu">
-		<button id="menu-toggle" aria-label="Abrir menú">&#9776;</button>
-		<a href="profile.php">Perfil</a>
-		<a href="history.php">Historial</a>
-		<a href="?logout=true">Cerrar Sesión</a>
-	</nav>
+	<!-- Incluir el encabezado común -->
+	<?php include('header.php'); ?>
 
 	<h1 class="saludo">Hola, <?= htmlspecialchars($user_name) ?></h1>
 
