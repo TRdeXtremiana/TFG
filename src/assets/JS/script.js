@@ -1,3 +1,30 @@
+// Función para esconder enlaces en función de la página actual
+function esconderEnlace() {
+	// Obtener la URL completa de la página actual
+	const currentPage = window.location.pathname;
+
+	// Obtener todos los enlaces en el menú (tanto de escritorio como móvil)
+	const enlaces = document.querySelectorAll('.menu-link');
+
+	// Recorrer cada enlace y verificar si su href coincide con la página actual
+	enlaces.forEach(enlace => {
+		const enlacePath = enlace.getAttribute('href');
+
+		// Verificar si la URL del enlace contiene la página actual (también considera rutas con parámetros)
+		if (currentPage.includes(enlacePath)) {
+			enlace.classList.add('hidden');
+		} else {
+			enlace.classList.remove('hidden');
+		}
+	});
+}
+
+// Llamar a la función cuando la página haya cargado
+document.addEventListener('DOMContentLoaded', function () {
+	esconderEnlace();
+});
+
+
 // Función para enviar un nuevo gasto al backend
 async function addExpense(amount, category, date) {
 	const response = await fetch("../backend/expenses.php", {
@@ -120,6 +147,9 @@ function init() {
 
 	// Inicializar estado del gráfico
 	document.getElementById('bar-chart').style.display = 'none';
+
+	// Llamar a la función para esconder enlaces
+	esconderEnlace();
 }
 
 // Ejecutar la configuración inicial al cargar el documento

@@ -17,9 +17,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 	<!-- Menú de navegación (visible solo en escritorio) -->
 	<nav id="desktop-menu">
-		<a href="profile.php" class="<?= $currentPage === 'profile.php' ? 'hidden' : '' ?>">Perfil</a>
-		<a href="history.php" class="<?= $currentPage === 'history.php' ? 'hidden' : '' ?>">Historial</a>
-		<a href="?logout=true" class="<?= $currentPage === 'index.php' ? 'hidden' : '' ?>">Cerrar Sesión</a>
+		<a href="profile.php" class="menu-link">Perfil</a>
+		<a href="history.php" class="menu-link">Historial</a>
+		<a href="?logout=true" class="menu-link">Cerrar Sesión</a>
 	</nav>
 </header>
 
@@ -27,7 +27,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <nav id="mobile-menu">
 	<button id="menu-toggle" aria-label="Abrir menú">&#9776;</button> <!-- Icono de menú hamburguesa -->
 
-	<a href="profile.php" class="<?= $currentPage === 'profile.php' ? 'hidden' : '' ?>">Perfil</a>
-	<a href="history.php" class="<?= $currentPage === 'history.php' ? 'hidden' : '' ?>">Historial</a>
-	<a href="?logout=true" class="<?= $currentPage === 'index.php' ? 'hidden' : '' ?>">Cerrar Sesión</a>
+	<a href="profile.php" class="menu-link">Perfil</a>
+	<a href="history.php" class="menu-link">Historial</a>
+	<a href="?logout=true" class="menu-link">Cerrar Sesión</a>
 </nav>

@@ -33,7 +33,6 @@ $profile_picture = $_SESSION['profile_picture'] ?? 'default-profile.png'; // Ima
 </head>
 
 <body>
-	<!-- Incluir el encabezado común -->
 	<?php include('header.php'); ?>
 
 	<h1 class="saludo">Hola, <?= htmlspecialchars($user_name) ?></h1>

@@ -278,6 +278,11 @@ button:hover {
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
 }
 
+.hidden {
+	display: none;
+}
+
+
 /* Media Queries */
 @media (max-width: 1024px) {
 	main {
