@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../backend/controllers/authController.php'; // Ruta al archivo con la lógica
+require_once '../backend/controllers/UserController.php'; // Ruta al archivo con la lógica
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,9 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	// Intentar registrar al usuario
 	$resultado = registrarUsuario($nombre, $email, $password);
 	if ($resultado === true) {
-		// Guardar el nombre en la sesión y redirigir
+		// Guardar el nombre en la sesión y redirigir a index.php
 		$_SESSION['user_name'] = $nombre;
-		header('Location: gestion_gastos.php');
+		$_SESSION['email'] = $email; // Opcional: guardar correo si es necesario
+		header('Location: ./index.php'); // Redirigir al index
 		exit();
 	} else {
 		$error = $resultado; // Error devuelto desde la función
@@ -26,36 +27,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../assets/CSS/styles.css">
-	<title>Registro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/CSS/styles.css">
+    <title>Registro</title>
 </head>
 
 <body>
-	<div class="login-container">
-		<!-- Mostrar mensaje de error si existe -->
-		<?php if ($error): ?>
-			<p class="error"><?= htmlspecialchars($error) ?></p>
-		<?php endif; ?>
+    <div class="login-container">
+        <!-- Mostrar mensaje de error si existe -->
+        <?php if ($error): ?>
+        <p class="error"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
 
-		<h1 class="centrado">Registro</h1>
+        <h1 class="centrado">Registro</h1>
 
-		<form method="POST" action="">
-			<label for="nombre">Nombre:</label>
-			<input type="text" id="nombre" name="nombre" required>
+        <form method="POST" action="">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
 
-			<label for="email">Correo electrónico:</label>
-			<input type="email" id="email" name="email" required>
+            <label for="email">Correo electrónico:</label>
+            <input type="email" id="email" name="email" required>
 
-			<label for="password">Contraseña:</label>
-			<input type="password" id="password" name="password" required>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
 
-			<button type="submit">Registrarse</button>
-		</form>
+            <button type="submit">Registrarse</button>
+        </form>
 
-		<p>¿Ya tienes cuenta? <a href="./login.php">Inicia sesión</a></p>
-	</div>
+        <p>¿Ya tienes cuenta? <a href="./login.php">Inicia sesión</a></p>
+    </div>
 </body>
 
 </html>

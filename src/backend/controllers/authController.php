@@ -2,79 +2,53 @@
 
 require_once __DIR__ . '/../models/database.php';
 
-// Función para iniciar la sesión con un usuario de prueba (solo en entorno de pruebas)
+/**
+ * Función para iniciar sesión con credenciales de prueba.
+ */
 function loginWithTestCredentials()
 {
-	session_start();
-	$_SESSION['user_id'] = 'test_user';  // Identificador temporal para el usuario de prueba
-	$_SESSION['user_name'] = 'Test User';  // Asignar el nombre del usuario en la sesión
+	if (session_status() === PHP_SESSION_NONE) {
+		session_start();
+	}
+	$_SESSION['user_id'] = 'usuario_prueba';
+	$_SESSION['user_name'] = 'Usuario de Prueba';
 	return true;
 }
 
-// Función para verificar las credenciales de un usuario
-function verifyCredentials($username, $password)
+/**
+ * Verificar las credenciales del usuario.
+ */
+function verifyCredentials($nombre_usuario, $contrasena)
 {
-	$pdo = connect_db();  // Llamar a la función para obtener la conexión a la base de datos
+	$pdo = Database::connect();
+	$stmt = $pdo->prepare('SELECT id_usuario, nombre_usuario, contrasena FROM usuarios WHERE nombre_usuario = :nombre_usuario');
+	$stmt->execute([':nombre_usuario' => $nombre_usuario]);
+	$usuario = $stmt->fetch();
 
-	// Preparar la consulta para obtener el id y la contraseña del usuario
-	$stmt = $pdo->prepare('SELECT id, name, password FROM users WHERE name = :name');
-	$stmt->execute([':name' => $username]);
-	$user = $stmt->fetch();
-
-	if ($user && password_verify($password, $user['password'])) {
-		// Si la contraseña coincide con la almacenada, devolver el usuario
-		return $user;
+	if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
+		return $usuario;
 	}
-
-	// Si las credenciales no son correctas, devolver false
 	return false;
 }
 
-// Función principal para hacer login
-function login($username, $password)
+/**
+ * Iniciar sesión con credenciales reales.
+ */
+function login($nombre_usuario, $contrasena)
 {
-	// Permitir acceso con credenciales vacías solo en entorno de pruebas
-	if ($username === '' && $password === '') {
+	if ($nombre_usuario === '' && $contrasena === '') {
 		return loginWithTestCredentials();
 	}
 
-	// Verificar credenciales reales
-	$user = verifyCredentials($username, $password);
+	$usuario = verifyCredentials($nombre_usuario, $contrasena);
 
-	if ($user) {
-		session_start();
-		$_SESSION['user_id'] = $user['id'];
-		$_SESSION['user_name'] = $user['name'];  // Guardamos el nombre del usuario en la sesión
+	if ($usuario) {
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		$_SESSION['user_id'] = $usuario['id_usuario'];
+		$_SESSION['user_name'] = $usuario['nombre_usuario'];
 		return true;
 	}
 	return false;
-}
-
-// Función para verificar si el correo electrónico ya está registrado
-function isEmailRegistered($email)
-{
-	$pdo = connect_db();  // Llamar a la función para obtener la conexión a la base de datos
-	$query = $pdo->prepare("SELECT id FROM users WHERE email = :email");
-	$query->execute(['email' => $email]);
-	return $query->rowCount() > 0;
-}
-
-// Función para registrar un nuevo usuario
-function registrarUsuario($name, $email, $password)
-{
-	$pdo = connect_db();  // Llamar a la función para obtener la conexión a la base de datos
-
-	if (isEmailRegistered($email)) {
-		return "El correo electrónico ya está registrado.";
-	}
-
-	// Insertar el nuevo usuario
-	$query = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-	$query->execute([
-		'name' => $name,
-		'email' => $email,
-		'password' => password_hash($password, PASSWORD_BCRYPT),  // Encriptar la contraseña
-	]);
-
-	return true;
 }

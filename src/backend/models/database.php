@@ -1,30 +1,50 @@
 <?php
 
 // Configuración de la base de datos
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'gestiongastos');
-define('DB_USER', 'root');
-define('DB_PASS', '');  // Cambia esta contraseña si es necesario
+if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
+if (!defined('DB_NAME')) define('DB_NAME', 'gestorgastos');
+if (!defined('DB_USER')) define('DB_USER', 'root');
+if (!defined('DB_PASS')) define('DB_PASS', ''); // Cambiar si la contraseña no es la predeterminada
 
-// Conexión a la base de datos utilizando PDO
-function connect_db()
+/**
+ * Clase para manejar la conexión a la base de datos utilizando PDO.
+ */
+class Database
 {
-	// Usar variable global de PDO
-	static $pdo = null;
+	private static $pdo = null;
 
-	// Si la conexión ya está establecida, no se hace de nuevo
-	if ($pdo === null) {
-		try {
-			// Establecer las opciones de la conexión PDO para mejorar la seguridad y el manejo de errores
-			$pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
-			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  // Configuración para manejo de errores
-			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);  // Por defecto, el PDO devolverá resultados como arrays asociativos
-			$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);  // Desactivar emulación de preparaciones para evitar ataques de inyección SQL
-		} catch (PDOException $e) {
-			// Manejar errores de conexión
-			die("Error de conexión: " . $e->getMessage());
+	/**
+	 * Establece una conexión a la base de datos y devuelve la instancia PDO.
+	 * Muestra mensajes de estado durante la conexión.
+	 *
+	 * @return PDO|null
+	 */
+	public static function connect()
+	{
+		if (self::$pdo === null) {
+			echo "Cargando conexión a la base de datos...<br>";
+
+			try {
+				self::$pdo = new PDO(
+					"mysql:host=" . DB_HOST . ";dbname=" . DB_NAME,
+					DB_USER,
+					DB_PASS,
+					[
+						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Manejo de errores
+						PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Modo fetch asociativo
+						PDO::ATTR_EMULATE_PREPARES => false, // Deshabilitar emulación de preparaciones
+					]
+				);
+				echo "¡Conexión exitosa a la base de datos!<br>";
+			} catch (PDOException $e) {
+				error_log("Error de conexión: " . $e->getMessage(), 3, __DIR__ . '/error_log.log'); // Log del error
+				die("Error de conexión a la base de datos. Ver logs para más información.");
+			}
 		}
-	}
 
-	return $pdo;
+		return self::$pdo;
+	}
 }
+
+// Ejemplo de uso
+$db = Database::connect();

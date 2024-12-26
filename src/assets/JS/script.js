@@ -1,154 +1,162 @@
-// Función para esconder enlaces en función de la página actual
-function esconderEnlace() {
-	// Obtener la URL completa de la página actual
-	const currentPage = window.location.pathname;
-
-	// Obtener todos los enlaces en el menú (tanto de escritorio como móvil)
-	const enlaces = document.querySelectorAll('.menu-link');
-
-	// Recorrer cada enlace y verificar si su href coincide con la página actual
-	enlaces.forEach(enlace => {
-		const enlacePath = enlace.getAttribute('href');
-
-		// Verificar si la URL del enlace contiene la página actual (también considera rutas con parámetros)
-		if (currentPage.includes(enlacePath)) {
-			enlace.classList.add('hidden');
-		} else {
-			enlace.classList.remove('hidden');
-		}
-	});
+// **UTILIDADES**
+/**
+ * Oculta un enlace si corresponde a la página actual.
+ * @param {Element} enlace - Elemento del enlace del menú.
+ * @param {string} currentPage - Ruta actual de la página.
+ */
+function toggleLinkVisibility(enlace, currentPage) {
+	const enlacePath = enlace.getAttribute('href');
+	if (currentPage.includes(enlacePath)) {
+		enlace.classList.add('hidden');
+	} else {
+		enlace.classList.remove('hidden');
+	}
 }
 
-// Llamar a la función cuando la página haya cargado
-document.addEventListener('DOMContentLoaded', function () {
-	esconderEnlace();
-});
+/**
+ * Obtiene la ruta actual de la página.
+ * @returns {string} - Ruta actual.
+ */
+function getCurrentPage() {
+	return window.location.pathname;
+}
 
+/**
+ * Oculta enlaces en función de la página actual.
+ */
+function esconderEnlace() {
+	const currentPage = getCurrentPage();
+	document.querySelectorAll('.menu-link').forEach(enlace => toggleLinkVisibility(enlace, currentPage));
+}
 
-// Función para enviar un nuevo gasto al backend
-async function addExpense(amount, category, date) {
-	const response = await fetch("../backend/expenses.php", {
+/**
+ * Envía datos al backend mediante POST.
+ * @param {string} url - URL del backend.
+ * @param {Object} data - Datos a enviar.
+ * @returns {Promise<Response>} - Respuesta del servidor.
+ */
+async function postData(url, data) {
+	return await fetch(url, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ amount, category, date }),
+		body: JSON.stringify(data),
 	});
-
-	if (response.ok) {
-		alert("Gasto añadido con éxito");
-	} else {
-		alert("Error al añadir el gasto");
-	}
 }
 
-// Función para manejar el envío del formulario de gastos
+// **FORMULARIO DE GASTOS**
+/**
+ * Maneja el envío del formulario de gastos.
+ * @param {Event} event - Evento de formulario.
+ */
 function handleExpenseFormSubmit(event) {
 	event.preventDefault();
-	const amount = document.getElementById("amount").value;
-	const category = document.getElementById("category").value;
-	const date = document.getElementById("date").value;
 
-	addExpense(amount, category, date);
+	const cantidad = document.getElementById("amount").value;
+	const idEtiqueta = document.getElementById("category").dataset.idEtiqueta || null;
+	const descripcion = document.getElementById("description").value || null;
+	const fechaGasto = document.getElementById("date").value;
+
+	addExpense({ cantidad, idEtiqueta, descripcion, fechaGasto });
 }
 
-// Función para abrir y cerrar el menú lateral en dispositivos móviles
-function toggleMobileMenu() {
-	const menu = document.getElementById('mobile-menu');
-	if (menu.style.left === '0px' || menu.classList.contains('open')) {
-		menu.style.left = '-250px';
-		menu.classList.remove('open');
-	} else {
-		menu.style.left = '0px';
-		menu.classList.add('open');
+/**
+ * Envía un nuevo gasto al backend.
+ * @param {Object} expenseData - Datos del gasto.
+ */
+async function addExpense(expenseData) {
+	try {
+		const response = await postData("../backend/expensesController.php", expenseData);
+
+		if (response.ok) {
+			alert("Gasto añadido con éxito");
+		} else {
+			alert("Error al añadir el gasto");
+		}
+	} catch (error) {
+		console.error("Error al enviar el gasto:", error);
+		alert("Error al conectar con el servidor");
 	}
 }
 
-// Función para configurar el gráfico circular (Pie Chart)
-function createPieChart() {
-	const gastosPorCategoria = getExpenseCategories();
-	const pieData = {
-		labels: Object.keys(gastosPorCategoria),
-		datasets: [{
-			label: 'Gastos por Categoría',
-			data: Object.values(gastosPorCategoria),
-			backgroundColor: ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99'],
-			borderColor: '#fff',
-			borderWidth: 1
-		}]
-	};
-
+// **GRÁFICOS**
+/**
+ * Crea un gráfico de tipo Pie.
+ * @param {Object} data - Datos del gráfico.
+ */
+function createPieChart(data) {
 	new Chart(document.getElementById('pie-chart'), {
 		type: 'pie',
-		data: pieData,
+		data,
 	});
 }
 
-// Función para configurar el gráfico de barra progresiva (Bar Chart)
-function createBarChart() {
-	const gastosPorCategoria = getExpenseCategories();
-	const barData = {
-		labels: Object.keys(gastosPorCategoria),
-		datasets: [{
-			label: 'Gastos por Categoría',
-			data: Object.values(gastosPorCategoria),
-			backgroundColor: '#4CAF50',
-			borderColor: '#388E3C',
-			borderWidth: 1
-		}]
-	};
-
+/**
+ * Crea un gráfico de tipo Bar.
+ * @param {Object} data - Datos del gráfico.
+ */
+function createBarChart(data) {
 	new Chart(document.getElementById('bar-chart'), {
 		type: 'bar',
-		data: barData,
-		options: {
-			scales: {
-				y: {
-					beginAtZero: true
-				}
-			}
-		}
+		data,
+		options: { scales: { y: { beginAtZero: true } } },
 	});
 }
 
-// Función para obtener las categorías de gastos (esto debería ser dinámico)
-function getExpenseCategories() {
-	return {
-		'Ocio': 120,
-		'Transporte': 80,
-		'Alimentación': 50,
-		'Vivienda': 30
-	};
-}
-
-// Función para alternar entre los gráficos
+/**
+ * Alterna la visibilidad de los gráficos.
+ */
 function toggleCharts() {
 	const pieChart = document.getElementById('pie-chart');
 	const barChart = document.getElementById('bar-chart');
 	const switcherButton = document.getElementById('switcher');
 
-	if (pieChart.style.display !== 'none') {
-		pieChart.style.display = 'none';
-		barChart.style.display = 'block';
-		switcherButton.classList.add('active');
-	} else {
-		pieChart.style.display = 'block';
-		barChart.style.display = 'none';
-		switcherButton.classList.remove('active');
-	}
+	const isPieVisible = pieChart.style.display !== 'none';
+	pieChart.style.display = isPieVisible ? 'none' : 'block';
+	barChart.style.display = isPieVisible ? 'block' : 'none';
+	switcherButton.classList.toggle('active', !isPieVisible);
 }
 
-// Configuración inicial del gráfico y eventos
+/**
+ * Genera datos ficticios para los gráficos (ejemplo; reemplazar por datos reales del backend).
+ * @returns {Object} - Datos para los gráficos.
+ */
+function getExpenseCategories() {
+	return {
+		labels: ['Ocio', 'Transporte', 'Alimentación', 'Vivienda'],
+		datasets: [{
+			label: 'Gastos por Categoría',
+			data: [120, 80, 50, 30],
+			backgroundColor: ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99'],
+			borderColor: '#fff',
+			borderWidth: 1,
+		}],
+	};
+}
+
+// **MENÚ**
+/**
+ * Alterna el menú lateral en dispositivos móviles.
+ */
+function toggleMobileMenu() {
+	const menu = document.getElementById('mobile-menu');
+	const isOpen = menu.classList.toggle('open');
+	menu.style.left = isOpen ? '0px' : '-250px';
+}
+
+// **INICIALIZACIÓN**
+/**
+ * Configura los eventos iniciales y la UI.
+ */
 function init() {
 	document.getElementById("expense-form").addEventListener("submit", handleExpenseFormSubmit);
 	document.getElementById('menu-toggle').addEventListener('click', toggleMobileMenu);
 
 	// Inicializar gráficos
-	createPieChart();
-	createBarChart();
-
-	// Inicializar estado del gráfico
+	createPieChart(getExpenseCategories());
+	createBarChart(getExpenseCategories());
 	document.getElementById('bar-chart').style.display = 'none';
 
-	// Llamar a la función para esconder enlaces
+	// Ocultar enlaces en función de la página
 	esconderEnlace();
 }
 
