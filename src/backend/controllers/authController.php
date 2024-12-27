@@ -46,6 +46,7 @@ function login($nombre_usuario, $contrasena)
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
+		//TODO solo se loguea con el username y debe poder loguar con el email
 		$_SESSION['user_id'] = $usuario['id_usuario'];
 		$_SESSION['user_name'] = $usuario['nombre_usuario'];
 		return true;

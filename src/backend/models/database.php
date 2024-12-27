@@ -22,7 +22,7 @@ class Database
 	public static function connect()
 	{
 		if (self::$pdo === null) {
-			echo "Cargando conexión a la base de datos...<br>";
+			// echo "Cargando conexión a la base de datos...<br>";
 
 			try {
 				self::$pdo = new PDO(
@@ -35,7 +35,7 @@ class Database
 						PDO::ATTR_EMULATE_PREPARES => false, // Deshabilitar emulación de preparaciones
 					]
 				);
-				echo "¡Conexión exitosa a la base de datos!<br>";
+				// echo "¡Conexión exitosa a la base de datos!<br>";
 			} catch (PDOException $e) {
 				error_log("Error de conexión: " . $e->getMessage(), 3, __DIR__ . '/error_log.log'); // Log del error
 				die("Error de conexión a la base de datos. Ver logs para más información.");
@@ -46,5 +46,4 @@ class Database
 	}
 }
 
-// Ejemplo de uso
 $db = Database::connect();

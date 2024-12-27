@@ -2,10 +2,12 @@
 // Iniciar sesión
 session_start();
 
+require_once __DIR__ . '/../backend/models/Database.php';
+
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
-	header('Location: login.php');
-	exit();
+    header('Location: login.php');
+    exit();
 }
 
 // Obtener el nombre de usuario desde la sesión
@@ -21,7 +23,6 @@ $user_name = $_SESSION['user_name'] ?? '';
     <title>Gestión de Gastos</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <script src="../assets/JS/script.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -35,30 +36,37 @@ $user_name = $_SESSION['user_name'] ?? '';
                 <h2>Añadir Gasto</h2>
 
                 <label for="amount">Cantidad:</label>
-                <input type="number" id="amount" name="amount" step="any" required>
+                <input type="number" id="amount" name="amount" step="any" required min="0.01">
 
                 <label for="category">Categoría:</label>
-                <input type="text" id="category" name="category" required>
+                <select id="category">
+                    <?php
+                    $stm = $db->prepare('SELECT id_etiqueta, nombre FROM etiquetas ORDER BY id_etiqueta asc');
+
+                    $stm->execute();
+                    $categories = $stm->fetchAll();
+
+                    foreach ($categories as $category) {
+                        echo "<option value='{$category['id_etiqueta']}'>{$category['nombre']}</option>";
+                    }
+                    ?>
+                </select>
+
+                <label for="description">Descripción (Opcional):</label>
+                <input type="text" id="description" name="description">
 
                 <label for="date">Fecha:</label>
                 <input type="date" id="date" name="date" required value="<?= date('Y-m-d') ?>">
 
-                <button type="submit">Añadir</button>
+                <button type="submit" id="submit-button">Añadir <span id="spinner" class="hidden">⏳</span></button>
+
             </form>
+
+            <!-- Span para mensajes dinámicos -->
+            <span id="expense-message" class="hidden"></span>
         </section>
 
-        <section class="expenses">
-            <h2>Gráficos</h2>
-            <div class="graphicsContainer">
-                <button id="switcher" onclick="toggleCharts()"></button>
 
-                <!-- Gráfico Circular -->
-                <canvas class="graphic" id="pie-chart" width="400" height="400"></canvas>
-
-                <!-- Gráfico de Barra Progresiva -->
-                <canvas class="graphic" id="bar-chart" width="400" height="400"></canvas>
-            </div>
-        </section>
     </main>
 </body>
 

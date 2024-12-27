@@ -216,7 +216,7 @@ label {
 	font-weight: bold;
 }
 
-input {
+input, select {
 	padding: 10px;
 	border: 2px solid #333;
 	border-radius: 8px;
@@ -246,6 +246,25 @@ button:hover {
 	background-color: #03dac6;
 	transform: translateY(-2px);
 }
+
+.hidden {
+    display: none;
+}
+
+#expense-message {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#expense-message.success {
+    color: green;
+}
+
+#expense-message.error {
+    color: rgb(0, 0, 0);
+}
+
 
 /* Listados */
 #expenses-list {
