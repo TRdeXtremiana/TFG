@@ -68,7 +68,7 @@ main {
 	padding: 2em;
 	max-width: 1200px;
 	margin: auto;
-	min-height: 100vh;
+	/* min-height: 100vh; */
 	box-sizing: border-box;
 	overflow: hidden;
 }
