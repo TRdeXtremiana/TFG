@@ -85,8 +85,6 @@ async function editExpense(expenseData) {
         if (response.ok) {
             const data = await response.json();
             showExpenseMessage(data.message || 'Gasto añadido con éxito', true);
-            // Actualiza gráficos
-            updateCharts(data.updatedCategories, data.updatedAmounts);
         } else {
             const error = await response.json();
             showExpenseMessage(error.error || 'Error al añadir el gasto', false);
@@ -104,9 +102,9 @@ function init() {
     if(expense)
         expense.addEventListener("submit", handleExpenseFormSubmit);
 
-    let edit=document.getElementById("expense-form");
+    let edit=document.getElementById("edit-form");
     if(edit)
-        edit.addEventListener("submit", handleExpenseFormSubmit);
+        edit.addEventListener("submit", handleEditFormSubmit);
 }
 
 document.addEventListener("DOMContentLoaded", init);

@@ -30,11 +30,12 @@ try {
         $descripcion = !empty($data['description']) ? htmlspecialchars($data['description'], ENT_QUOTES, 'UTF-8') : null;
         $fecha_gasto = $data['date'];
 
-        if ($cantidad <= 0) {
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $cantidad) || $cantidad <= 0) {
             error_log('Validación fallida: ' . print_r($data, true));
-            jsonResponse(['error' => 'Datos inválidos. Asegúrate de enviar cantidad válida.'], 400);
+            jsonResponse(['error' => 'Datos inválidos. Asegúrate de enviar una cantidad válida.'], 400);
             exit();
         }
+
 
         if ($id_etiqueta < 0) {
             //TODO preguntar si quieres crear una etiqueta nueva
