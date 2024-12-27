@@ -36,6 +36,12 @@ try {
             exit();
         }
 
+        if (!is_null($descripcion) && strlen($descripcion) > 255) {
+            error_log('Validación fallida: Descripción demasiado larga');
+            jsonResponse(['error' => 'Descripción demasiado larga. Máximo 255 caracteres.'], 400);
+            exit();
+        }
+
 
         if ($id_etiqueta < 0) {
             //TODO preguntar si quieres crear una etiqueta nueva
