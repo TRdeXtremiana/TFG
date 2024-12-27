@@ -12,22 +12,23 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 
 <header>
-	<button id="menu-toggle" aria-label="Abrir menú">&#9776;</button> <!-- Icono de menú hamburguesa -->
-	<h1><a href="./index.php">Gestión de Gastos</a></h1>
+    <button id="menu-toggle" aria-label="Abrir menú">&#9776;</button> <!-- Icono de menú hamburguesa -->
+    <h1><a href="./index.php">Gestión de Gastos</a></h1>
 
-	<!-- Menú de navegación (visible solo en escritorio) -->
-	<nav id="desktop-menu">
-		<a href="profile.php" class="menu-link">Perfil</a>
-		<a href="history.php" class="menu-link">Historial</a>
-		<a href="?logout=true" class="menu-link">Cerrar Sesión</a>
-	</nav>
+    <!-- Menú de navegación (visible solo en escritorio) -->
+    <nav id="desktop-menu">
+        <a href="profile.php" class="menu-link <?php if ($currentPage == 'profile.php') echo 'active' ?>">Perfil</a>
+        <a href="history.php" class="menu-link <?php if ($currentPage == 'history.php') echo 'active' ?>">Historial</a>
+        <a href="?logout=true" class="menu-link">Cerrar Sesión</a>
+    </nav>
 </header>
 
 <!-- Menú lateral para móviles -->
+<!-- TODO añadir bootstrap -->
 <nav id="mobile-menu">
-	<button id="menu-toggle" aria-label="Abrir menú">&#9776;</button> <!-- Icono de menú hamburguesa -->
+    <button id="menu-toggle" aria-label="Abrir menú">&#9776;</button> <!-- Icono de menú hamburguesa -->
 
-	<a href="profile.php" class="menu-link">Perfil</a>
-	<a href="history.php" class="menu-link">Historial</a>
-	<a href="?logout=true" class="menu-link">Cerrar Sesión</a>
+    <a href="profile.php" class="menu-link">Perfil</a>
+    <a href="history.php" class="menu-link">Historial</a>
+    <a href="?logout=true" class="menu-link">Cerrar Sesión</a>
 </nav>
