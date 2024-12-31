@@ -121,46 +121,6 @@ main {
 	color: #03dac6;
 }
 
-/* Menú Lateral (solo en móviles) */
-#mobile-menu {
-	position: fixed;
-	top: 0;
-	left: -999px;
-	height: 100%;
-	background-color: #1f1f1f;
-	display: flex;
-	flex-direction: column;
-	gap: 1em;
-	padding: 2em 1em;
-	box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
-	transition: left 0.3s ease-in-out;
-	z-index: 1000;
-}
-
-#mobile-menu a {
-	color: #8184f5;
-	text-decoration: none;
-	font-size: 1.2em;
-	font-weight: bold;
-	padding: 0.5em 0;
-	transition: color 0.3s ease-in-out;
-}
-
-#mobile-menu a:hover {
-	color: #03dac6;
-}
-
-/* Contenedor de Gráficos */
-.graphicsContainer {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 20px;
-	position: relative;
-	width: 50%;
-}
-
 /* Estilos de Botón */
 #switcher {
 	width: 100px;
@@ -365,6 +325,108 @@ button:hover {
 
 .messages-container {
 	margin: 20px 0;
+}
+
+/* Historial */
+/* Historial principal */
+.historial {
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Formulario de historial */
+.form-historial {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.historial-select {
+    padding: 10px 15px;
+    border: 1px;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #8184f5;
+    transition: 0.3s;
+}
+
+.historial-select:hover {
+    border-color:  #4340e0;
+    background-color: #4340e0;
+}
+
+.historial-boton {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #4340e0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.historial-boton:hover {
+    background-color: #8184f5;
+}
+
+/* Tabla de historial */
+.tabla-historial {
+    margin-top: 20px;
+}
+
+.historial-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.historial-tabla thead {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.historial-tabla th,
+.historial-tabla td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.historial-tabla tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.historial-tabla tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.historial-tabla button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.historial-tabla button:hover {
+    background-color: #0056b3;
+}
+
+
+.movile-menu {
+	display: none;
 }
 
 

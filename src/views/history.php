@@ -25,103 +25,70 @@ if (!isset($_SESSION['user_id'])) {
 <body>
     <?php include 'header.php'; ?>
 
-    <main>
-        <?php
-        // Gestión general
-        if (isset($_POST['meses']) && isset($_POST['anios'])) :
-            $sql = 'SELECT g.id_gasto, g.cantidad, g.descripcion, g.fecha_gasto, e.nombre as categoria
-                    FROM gastos g
-                    JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
-                    WHERE g.id_usuario = :id_usuario
-                    AND MONTH(g.fecha_gasto) = :mes
-                    AND YEAR(g.fecha_gasto) = :anio
-                    AND g.eliminado = 0
-                    ORDER BY g.fecha_gasto DESC';
+    <main class="historial">
+        <?php if (isset($_POST['meses']) && isset($_POST['anios'])) : ?>
+            <div class="tabla-historial">
+                <table id="tablaGastos" class="historial-tabla">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Cantidad</th>
+                            <th>Etiqueta</th>
+                            <th>Descripción</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($resultado as $gasto) : ?>
+                            <tr>
+                                <td><?= $gasto['fecha_gasto'] ?></td>
+                                <td><?= $gasto['cantidad'] ?></td>
+                                <td><?= $gasto['categoria'] ?></td>
+                                <td><?= $gasto['descripcion'] ?></td>
+                                <td>
+                                    <form action="edit.php" method="POST">
+                                        <button type="submit" name="id" value="<?= $gasto['id_gasto'] ?>">Editar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else : ?>
+            <form action="" method="POST" class="form-historial">
+                <div>
+                    <select name="meses" id="meses" class="historial-select">
+                        <option value="01">Enero</option>
+                        <option value="02">Febrero</option>
+                        <option value="03">Marzo</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Mayo</option>
+                        <option value="06">Junio</option>
+                        <option value="07">Julio</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
 
-            $stm = $db->prepare($sql);
-            $stm->execute([
-                ':id_usuario' => $_SESSION['user_id'],
-                ':mes' => $_POST['meses'],
-                ':anio' => $_POST['anios']
-            ]);
-
-            $resultado = $stm->fetchAll();
-        ?>
-
-        <!-- TODO ponerle nombre para que ocupe media pantalla -->
-        <div>
-            <table id="tablaGastos">
-                <thead>
-                    <tr>
-                        <th>fecha</th>
-                        <th>cantidad</th>
-                        <th>etiqueta</th>
-                        <th>descripcion</th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <?php
-                        foreach ($resultado as $gasto) {
-                            echo "<tr>";
-                            echo "<td>{$gasto['fecha_gasto']}</td>";
-                            echo "<td>{$gasto['cantidad']}</td>";
-                            echo "<td>{$gasto['categoria']}</td>";
-                            echo "<td>{$gasto['descripcion']}</td>";
-                            echo "<td> <form action='edit.php' method='POST'> <button type='submit' name='id' value='{$gasto['id_gasto']}'> editar </button> </form> </td>";
-                            echo "</tr>";
-                        }
-                        ?>
-                </tbody>
-            </table>
-        </div>
-
-        <script>
-        let table = new DataTable('#tablaGastos', {
-            // options:
-        });
-        </script>
-
-        <?php
-        // Selector por fecha
-        else :
-        ?>
-
-        <form action="" method="POST">
-            <select name="anios" id="anios">
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-            </select>
-
-            <select name="meses" id="meses">
-                <option value="01">Enero</option>
-                <option value="02">Febrero</option>
-                <option value="03">Marzo</option>
-                <option value="04">Abril</option>
-                <option value="05">Mayo</option>
-                <option value="06">Junio</option>
-                <option value="07">Julio</option>
-                <option value="08">Agosto</option>
-                <option value="09">Septiembre</option>
-                <option value="10">Octubre</option>
-                <option value="11">Noviembre</option>
-                <option value="12">Diciembre</option>
-            </select>
+                    <select name="anios" id="anios" class="historial-select">
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                    </select>
 
 
-            <button type="submit">Buscar</button>
-        </form>
+                </div>
 
-
-        <?php
-        endif;
-        ?>
-
+                <button type="submit" class="historial-boton">Buscar</button>
+            </form>
+        <?php endif; ?>
     </main>
+
 </body>
 
 </html>

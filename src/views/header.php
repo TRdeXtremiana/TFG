@@ -1,10 +1,10 @@
 <?php
 // Verificar si el usuario está intentando cerrar sesión
 if (isset($_GET['logout'])) {
-	session_unset();
-	session_destroy();
-	header('Location: login.php');
-	exit();
+    session_unset();
+    session_destroy();
+    header('Location: login.php');
+    exit();
 }
 
 // Obtener la página actual para asignar clases activas
@@ -24,11 +24,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 </header>
 
 <!-- Menú lateral para móviles -->
-<!-- TODO añadir bootstrap -->
+<!-- TODO añadir bootstrap
 <nav id="mobile-menu">
     <button id="menu-toggle" aria-label="Abrir menú">&#9776;</button> <!-- Icono de menú hamburguesa -->
 
-    <a href="profile.php" class="menu-link">Perfil</a>
+<!-- <a href="profile.php" class="menu-link">Perfil</a>
     <a href="history.php" class="menu-link">Historial</a>
     <a href="?logout=true" class="menu-link">Cerrar Sesión</a>
-</nav>
+</nav> -->
