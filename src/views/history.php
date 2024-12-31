@@ -122,7 +122,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meses']) && isset($_P
                     </p>
 
                     <div class="historial-categorias">
-                        <h2>Gastos por Categoría</h2>
                         <table class="historial-categorias-tabla">
                             <thead>
                                 <tr>
