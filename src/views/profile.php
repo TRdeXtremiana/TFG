@@ -71,7 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
 
 	<main>
 		<section class="profile-section">
-			<h2>Editar Perfil</h2>
 
 			<div id="perfilContainer">
 				<!-- Mostrar la foto de perfil -->
