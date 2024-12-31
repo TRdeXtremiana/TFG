@@ -107,32 +107,38 @@ function init() {
         edit.addEventListener("submit", handleEditFormSubmit);
 }
 
-document.getElementById('delete-button').addEventListener('click', function () {
-    const id = document.getElementById('id').value;
+document.addEventListener("DOMContentLoaded", () => {
+    init();
 
-    if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
-        fetch("../backend/controllers/editExpensesController.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    alert(data.message);
-                    window.location.href = "index.php"; // Redirigir tras eliminar
-                } else {
-                    alert(data.error || "Error al eliminar el registro.");
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                alert("Error al procesar la solicitud.");
-            });
+    const deleteButton = document.getElementById('delete-button');
+    if (deleteButton) {
+        deleteButton.addEventListener('click', function () {
+            const id = document.getElementById('id').value;
+
+            if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
+                fetch("../backend/controllers/editExpensesController.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ id }),
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            alert(data.message);
+                            window.location.href = "index.php"; // Redirigir tras eliminar
+                        } else {
+                            alert(data.error || "Error al eliminar el registro.");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("Error al procesar la solicitud.");
+                    });
+            }
+        });
     }
 });
-
 
 document.addEventListener("DOMContentLoaded", init);

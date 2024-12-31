@@ -69,9 +69,8 @@ if (!isset($_POST['id'])) {
                 <div class="form-buttons">
                     <button type="submit" id="edit-button">Editar <span id="spinner" class="hidden">⏳</span></button>
 
-                    <!-- Botón de eliminar -->
                     <button type="button" id="delete-button">
-                        <img src="../assets/images/trash-can.svg" alt="Eliminar" width="12">
+                        <img src="../assets/images/trash-can.svg" alt="Eliminar" width="13">
                     </button>
                 </div>
             </form>

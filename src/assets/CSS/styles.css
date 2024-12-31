@@ -245,7 +245,7 @@ button:hover {
 
 .error {
 	background-color: rgb(114, 5, 5);
-	color: white;
+	color: #fff;
 	padding: 10px;
 	border-radius: 5px;
 	font-weight: bold;
@@ -374,6 +374,40 @@ button:hover {
     background-color: #8184f5;
 }
 
+/* Editar */
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1em;
+}
+
+.form-buttons .left-button {
+    background-color: #4CAF50; /* Verde para editar */
+    color: white;
+    padding: 0.5em 1em;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.form-buttons .right-button {
+    background-color: #FF2400; /* Rojo escarlata para eliminar */
+    color: white;
+    padding: 0.5em 1em;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.form-buttons button:hover {
+    opacity: 0.9;
+}
+
+
+/* Menú de movil */
 .movile-menu {
 	display: none;
 }
