@@ -57,9 +57,10 @@ function updateDescription($userId, $newDescription)
 
 function updateProfilePicture($userId, $file)
 {
-    $targetDir = __DIR__ . "/../uploads/profile_pictures/";
+    // Ruta al directorio de imágenes
+    $targetDir = __DIR__ . "../assets/images/profileImages/";
 
-    // Crear el directorio si no existe
+    // Crear la carpeta si no existe
     if (!is_dir($targetDir)) {
         mkdir($targetDir, 0777, true);
     }
@@ -80,13 +81,15 @@ function updateProfilePicture($userId, $file)
     $pdo = Database::connect();
 
     try {
+        // Guardar la ruta relativa en la base de datos
+        $relativePath = "src/assets/images/profileImages/" . $fileName;
         $stmt = $pdo->prepare("UPDATE usuarios SET foto_perfil = :foto WHERE id_usuario = :id");
         $stmt->execute([
-            ':foto' => "uploads/profile_pictures/" . $fileName,
+            ':foto' => $relativePath,
             ':id' => $userId
         ]);
 
-        $_SESSION['profile_picture'] = "uploads/profile_pictures/" . $fileName;
+        $_SESSION['profile_picture'] = $relativePath;
         return "Foto de perfil actualizada correctamente.";
     } catch (PDOException $e) {
         return "Error al actualizar la foto de perfil: " . $e->getMessage();

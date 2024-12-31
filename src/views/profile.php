@@ -11,20 +11,24 @@ $userId = $_SESSION['user_id'] ?? null;
 if ($userId) {
 	$userData = getUserData($userId);
 
-	// Si no hay datos, asignar valores predeterminados
+	// Asignar valores de la base de datos o predeterminados
 	$user_name = $userData['nombre_usuario'] ?? 'Usuario';
 	$description = $userData['descripcion'] ?? 'No tienes una descripción configurada.';
-	$profile_picture = $userData['foto_perfil'] ?? 'default-profile.png';
+	$profile_picture = $userData['foto_perfil'] ?? '../assets/images/account-circle.svg';
+
+	// Verificar si el archivo existe físicamente
+	if (!file_exists(__DIR__ . '/../' . $profile_picture)) {
+		$profile_picture = '../assets/images/account-circle.svg';
+	}
 } else {
-	// Si no hay un usuario identificado
+	// Valores predeterminados si no hay sesión
 	$user_name = 'Usuario';
 	$description = 'No tienes una descripción configurada.';
-	$profile_picture = 'default-profile.png';
+	$profile_picture = '../assets/images/account-circle.svg';
 }
 
-// Si el formulario ha sido enviado, procesar la solicitud
+// Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
-	// Verificar qué campo fue enviado y llamar a la función correspondiente
 	if (isset($_POST['user_name'])) {
 		$message = updateUserName($userId, $_POST['user_name']);
 	}
@@ -37,14 +41,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
 		$message = updateProfilePicture($userId, $_FILES['profile_picture']);
 	}
 
-	// Volver a cargar los datos actualizados del usuario
+	// Recargar los datos del usuario
 	$userData = getUserData($userId);
 	$user_name = $userData['nombre_usuario'];
 	$description = $userData['descripcion'] ?: 'No tienes una descripción configurada.';
 	$profile_picture = $userData['foto_perfil'];
+
+	if (!file_exists(__DIR__ . '/../' . $profile_picture)) {
+		$profile_picture = '../assets/images/account-circle.svg';
+	}
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -76,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
 				<div id="descripcion">
 					<!-- Mostrar la descripción -->
 					<h3>Descripción:</h3>
-					<p><?= htmlspecialchars($description) ?: 'No tienes una descripción configurada.' ?></p>
+					<p><?= htmlspecialchars($description) ?></p>
 				</div>
 			</div>
 
