@@ -30,6 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meses']) && isset($_P
         ]);
 
         $resultado = $stm->fetchAll();
+
+        $sqlTotalesPorCategoria = 'SELECT e.nombre as categoria, SUM(g.cantidad) as total_categoria
+                           FROM gastos g
+                           JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
+                           WHERE g.id_usuario = :id_usuario
+                           AND MONTH(g.fecha_gasto) = :mes
+                           AND YEAR(g.fecha_gasto) = :anio
+                           AND g.eliminado = 0
+                           GROUP BY e.nombre';
+
+        $stmTotales = $db->prepare($sqlTotalesPorCategoria);
+        $stmTotales->execute([
+            ':id_usuario' => $_SESSION['user_id'],
+            ':mes' => $_POST['meses'],
+            ':anio' => $_POST['anios']
+        ]);
+
+        $totalesPorCategoria = $stmTotales->fetchAll();
     } catch (PDOException $e) {
         error_log('Error en la consulta: ' . $e->getMessage());
     }
@@ -102,6 +120,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meses']) && isset($_P
                         echo $total;
                         ?>
                     </p>
+
+                    <div class="historial-categorias">
+                        <h2>Gastos por Categoría</h2>
+                        <table class="historial-categorias-tabla">
+                            <thead>
+                                <tr>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($totalesPorCategoria as $categoria) : ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($categoria['categoria']) ?></td>
+                                        <td><?= number_format($categoria['total_categoria'], 2) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
 
                 <script>

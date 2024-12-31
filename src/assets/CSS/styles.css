@@ -388,7 +388,8 @@ background-color: #121212;
 
 .historial-total {
     flex: 1; 
-    border: 1px solid #e0e0e0; 
+	color: #121212; 
+    border: 1px solid #000000; 
     border-radius: 8px; 
     background-color: #888888; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -403,13 +404,11 @@ background-color: #121212;
     margin-bottom: 10px;
     font-size: 1.2rem; 
     font-weight: 600; 
-    color: #444; 
 }
 
 .historial-total-cantidad {
     font-size: 1.5rem; 
     font-weight: 700; 
-    color: #333; 
     margin: 0;
 }
 
@@ -417,15 +416,16 @@ background-color: #121212;
     content: '€'; 
     font-size: 1rem; 
     font-weight: 400;
-    color: #000000; 
     margin-right: 4px;
 }
 
 
-.historial-tabla {
-    width: 100%;
-    border-collapse: collapse;
+.historial-categorias-tabla th, 
+.historial-categorias-tabla td {
+    padding: 8px;
+    text-align: left;
 }
+
 
 .historial-tabla th, .historial-tabla td {
     padding: 8px;
