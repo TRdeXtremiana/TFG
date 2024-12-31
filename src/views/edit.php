@@ -34,7 +34,7 @@ if (!isset($_POST['id'])) {
         <section class="add-expense">
             <h2>Editar</h2>
 
-            <form id="edit-form">
+            <form id="edit-form" method="POST" action="delete-expense.php">
                 <?php
                 $stm = $db->prepare('SELECT * FROM gastos WHERE id_gasto = :id_gasto');
                 $stm->execute([':id_gasto' => $_POST['id']]);
@@ -48,7 +48,7 @@ if (!isset($_POST['id'])) {
                     value="<?= $expense['cantidad'] ?>">
 
                 <label for="category">Categoría:</label>
-                <select id="category">
+                <select id="category" name="category">
                     <?php
                     $stm = $db->prepare('SELECT id_etiqueta, nombre FROM etiquetas ORDER BY id_etiqueta asc');
                     $stm->execute();
@@ -66,8 +66,16 @@ if (!isset($_POST['id'])) {
                 <label for="date">Fecha:</label>
                 <input type="date" id="date" name="date" required value="<?= $expense['fecha_gasto'] ?>">
 
-                <button type="submit" id="edit-button">Editar <span id="spinner" class="hidden">⏳</span></button>
+                <div class="form-buttons">
+                    <button type="submit" id="edit-button">Editar <span id="spinner" class="hidden">⏳</span></button>
+
+                    <!-- Botón de eliminar -->
+                    <button type="button" id="delete-button">
+                        <img src="../assets/images/trash-can.svg" alt="Eliminar" width="12">
+                    </button>
+                </div>
             </form>
+
 
             <!-- Span para mensajes dinámicos -->
             <span id="expense-message" class="hidden"></span>
