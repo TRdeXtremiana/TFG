@@ -5,21 +5,46 @@ include('../backend/functions.php');
 // Iniciar sesión
 session_start();
 
-// Verificar si el usuario está intentando cerrar sesión
-if (isset($_GET['logout'])) {
-	logout();
+// Obtener la información del usuario desde la base de datos
+$userId = $_SESSION['user_id'] ?? null;
+
+if ($userId) {
+	$userData = getUserData($userId);
+
+	// Si no hay datos, asignar valores predeterminados
+	$user_name = $userData['nombre_usuario'] ?? 'Usuario';
+	$description = $userData['descripcion'] ?? 'No tienes una descripción configurada.';
+	$profile_picture = $userData['foto_perfil'] ?? 'default-profile.png';
+} else {
+	// Si no hay un usuario identificado
+	$user_name = 'Usuario';
+	$description = 'No tienes una descripción configurada.';
+	$profile_picture = 'default-profile.png';
 }
 
-// Si el formulario ha sido enviado, guardar los datos en la sesión
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	handleProfileUpdate();
-}
+// Si el formulario ha sido enviado, procesar la solicitud
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
+	// Verificar qué campo fue enviado y llamar a la función correspondiente
+	if (isset($_POST['user_name'])) {
+		$message = updateUserName($userId, $_POST['user_name']);
+	}
 
-// Obtener la información del usuario desde la sesión
-$user_name = $_SESSION['user_name'] ?? 'Usuario';
-$description = $_SESSION['description'] ?? '';
-$profile_picture = $_SESSION['profile_picture'] ?? 'default-profile.png'; // Imagen por defecto si no tiene foto
+	if (isset($_POST['description'])) {
+		$message = updateDescription($userId, $_POST['description']);
+	}
+
+	if (!empty($_FILES['profile_picture']['name'])) {
+		$message = updateProfilePicture($userId, $_FILES['profile_picture']);
+	}
+
+	// Volver a cargar los datos actualizados del usuario
+	$userData = getUserData($userId);
+	$user_name = $userData['nombre_usuario'];
+	$description = $userData['descripcion'] ?: 'No tienes una descripción configurada.';
+	$profile_picture = $userData['foto_perfil'];
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -41,13 +66,19 @@ $profile_picture = $_SESSION['profile_picture'] ?? 'default-profile.png'; // Ima
 		<section class="profile-section">
 			<h2>Editar Perfil</h2>
 
-			<!-- Mostrar la foto de perfil -->
-			<h3>Foto de Perfil</h3>
-			<img src="<?= htmlspecialchars($profile_picture) ?>" alt="Foto de Perfil" width="100" height="100">
+			<div id="perfilContainer">
+				<!-- Mostrar la foto de perfil -->
+				<div id="fotoPerfil">
+					<h3>Foto de Perfil</h3>
+					<img src="<?= htmlspecialchars($profile_picture) ?>" alt="Foto de Perfil" width="100" height="100">
+				</div>
 
-			<!-- Mostrar la descripción -->
-			<h3>Descripción:</h3>
-			<p><?= htmlspecialchars($description) ?: 'No tienes una descripción configurada.' ?></p>
+				<div id="descripcion">
+					<!-- Mostrar la descripción -->
+					<h3>Descripción:</h3>
+					<p><?= htmlspecialchars($description) ?: 'No tienes una descripción configurada.' ?></p>
+				</div>
+			</div>
 
 			<!-- Formulario para editar perfil -->
 			<form method="POST" enctype="multipart/form-data">
