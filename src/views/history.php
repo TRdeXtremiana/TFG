@@ -56,76 +56,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meses']) && isset($_P
 
     <main class="historial">
         <?php if (isset($_POST['meses']) && isset($_POST['anios'])) : ?>
-        <div class="tabla-historial">
-            <table id="tablaGastos" class="historial-tabla">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Cantidad</th>
-                        <th>Etiqueta</th>
-                        <th>Descripción</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (is_array($resultado)) : ?>
-                    <?php foreach ($resultado as $gasto) : ?>
-                    <tr>
-                        <td><?= $gasto['fecha_gasto'] ?></td>
-                        <td><?= $gasto['cantidad'] ?></td>
-                        <td><?= $gasto['categoria'] ?></td>
-                        <td><?= $gasto['descripcion'] ?></td>
-                        <td>
-                            <form action="edit.php" method="POST" class="editarHistorial">
-                                <button type="submit" name="id" value="<?= $gasto['id_gasto'] ?>">Editar</button>
-                            </form>
-                        </td>
-                        <?php endforeach; ?>
-                        <?php else : ?>
-                    <tr>
-                        <td colspan="5">No hay datos disponibles.</td>
-                    </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+            <div class="historialContainer">
+                <div class="tabla-historial">
+                    <table id="tablaGastos" class="historial-tabla">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Cantidad</th>
+                                <th>Etiqueta</th>
+                                <th>Descripción</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (is_array($resultado)) : ?>
+                                <?php foreach ($resultado as $gasto) : ?>
+                                    <tr>
+                                        <td><?= $gasto['fecha_gasto'] ?></td>
+                                        <td><?= $gasto['cantidad'] ?></td>
+                                        <td><?= $gasto['categoria'] ?></td>
+                                        <td><?= $gasto['descripcion'] ?></td>
+                                        <td>
+                                            <form action="edit.php" method="POST" class="editarHistorial">
+                                                <button type="submit" name="id" value="<?= $gasto['id_gasto'] ?>">Editar</button>
+                                            </form>
+                                        </td>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    <tr>
+                                        <td colspan="5">No hay datos disponibles.</td>
+                                    </tr>
+                                <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
 
-        <script>
-        let table = new DataTable('#tablaGastos', {
-            // options:
-        });
-        </script>
+                <div class="historial-total">
+                    <h2>Total</h2>
+                    <p class="historial-total-cantidad">
+                        <?php
+                        $total = 0;
+                        foreach ($resultado as $gasto) {
+                            $total += $gasto['cantidad'];
+                        }
+                        echo $total;
+                        ?>
+                    </p>
+                </div>
 
-        <?php else : ?>
-        <form action="" method="POST" class="form-historial">
-            <div class="historial-selects">
-                <select name="meses" id="meses" class="historial-select">
-                    <option value="01">Enero</option>
-                    <option value="02">Febrero</option>
-                    <option value="03">Marzo</option>
-                    <option value="04">Abril</option>
-                    <option value="05">Mayo</option>
-                    <option value="06">Junio</option>
-                    <option value="07">Julio</option>
-                    <option value="08">Agosto</option>
-                    <option value="09">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                </select>
+                <script>
+                    let table = new DataTable('#tablaGastos', {
+                        // options:
+                    });
+                </script>
 
-                <select name="anios" id="anios" class="historial-select">
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                </select>
-            </div>
+            <?php else : ?>
+                <form action="" method="POST" class="form-historial">
+                    <div class="historial-selects">
+                        <select name="meses" id="meses" class="historial-select">
+                            <option value="01">Enero</option>
+                            <option value="02">Febrero</option>
+                            <option value="03">Marzo</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Mayo</option>
+                            <option value="06">Junio</option>
+                            <option value="07">Julio</option>
+                            <option value="08">Agosto</option>
+                            <option value="09">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
 
-            <button type="submit" class="historial-boton">Buscar</button>
-        </form>
-        <?php endif; ?>
+                        <select name="anios" id="anios" class="historial-select">
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="historial-boton">Buscar</button>
+                </form>
+            <?php endif; ?>
     </main>
 
 </body>

@@ -373,6 +373,66 @@ button:hover {
 background-color: #121212;
 }
 
+.historialContainer {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 20px; 
+    margin: 20px;
+}
+
+.tabla-historial {
+    flex: 3; 
+    max-height: 70vh; 
+}
+
+.historial-total {
+    flex: 1; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px; 
+    background-color: #888888; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.historial-total h2 {
+    margin-bottom: 10px;
+    font-size: 1.2rem; 
+    font-weight: 600; 
+    color: #444; 
+}
+
+.historial-total-cantidad {
+    font-size: 1.5rem; 
+    font-weight: 700; 
+    color: #333; 
+    margin: 0;
+}
+
+.historial-total-cantidad::after {
+    content: '€'; 
+    font-size: 1rem; 
+    font-weight: 400;
+    color: #000000; 
+    margin-right: 4px;
+}
+
+
+.historial-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.historial-tabla th, .historial-tabla td {
+    padding: 8px;
+    text-align: left;
+}
+
+
 /* Editar */
 .form-buttons {
     display: flex;
@@ -382,7 +442,6 @@ background-color: #121212;
 }
 
 .form-buttons .left-button {
-    background-color: #4CAF50; /* Verde para editar */
     color: white;
     padding: 0.5em 1em;
     border: none;
@@ -392,7 +451,6 @@ background-color: #121212;
 }
 
 .form-buttons .right-button {
-    background-color: #FF2400; /* Rojo escarlata para eliminar */
     color: white;
     padding: 0.5em 1em;
     border: none;
