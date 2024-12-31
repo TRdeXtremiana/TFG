@@ -6,7 +6,36 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
 }
+
+// Inicializar $resultado
+$resultado = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meses']) && isset($_POST['anios'])) {
+    try {
+        $db = Database::connect();
+        $sql = 'SELECT g.id_gasto, g.cantidad, g.descripcion, g.fecha_gasto, e.nombre as categoria
+                FROM gastos g
+                JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
+                WHERE g.id_usuario = :id_usuario
+                AND MONTH(g.fecha_gasto) = :mes
+                AND YEAR(g.fecha_gasto) = :anio
+                AND g.eliminado = 0
+                ORDER BY g.fecha_gasto DESC';
+
+        $stm = $db->prepare($sql);
+        $stm->execute([
+            ':id_usuario' => $_SESSION['user_id'],
+            ':mes' => $_POST['meses'],
+            ':anio' => $_POST['anios']
+        ]);
+
+        $resultado = $stm->fetchAll();
+    } catch (PDOException $e) {
+        error_log('Error en la consulta: ' . $e->getMessage());
+    }
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -39,25 +68,37 @@ if (!isset($_SESSION['user_id'])) {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($resultado as $gasto) : ?>
-                            <tr>
-                                <td><?= $gasto['fecha_gasto'] ?></td>
-                                <td><?= $gasto['cantidad'] ?></td>
-                                <td><?= $gasto['categoria'] ?></td>
-                                <td><?= $gasto['descripcion'] ?></td>
-                                <td>
-                                    <form action="edit.php" method="POST">
-                                        <button type="submit" name="id" value="<?= $gasto['id_gasto'] ?>">Editar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                        <?php if (is_array($resultado)) : ?>
+                            <?php foreach ($resultado as $gasto) : ?>
+                                <tr>
+                                    <td><?= $gasto['fecha_gasto'] ?></td>
+                                    <td><?= $gasto['cantidad'] ?></td>
+                                    <td><?= $gasto['categoria'] ?></td>
+                                    <td><?= $gasto['descripcion'] ?></td>
+                                    <td>
+                                        <form action="edit.php" method="POST">
+                                            <button type="submit" name="id" value="<?= $gasto['id_gasto'] ?>">Editar</button>
+                                        </form>
+                                    </td>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="5">No hay datos disponibles.</td>
+                                </tr>
+                            <?php endif; ?>
                     </tbody>
                 </table>
             </div>
+
+            <script>
+                let table = new DataTable('#tablaGastos', {
+                    // options:
+                });
+            </script>
+
         <?php else : ?>
             <form action="" method="POST" class="form-historial">
-                <div>
+                <div class="historial-selects">
                     <select name="meses" id="meses" class="historial-select">
                         <option value="01">Enero</option>
                         <option value="02">Febrero</option>
@@ -80,8 +121,6 @@ if (!isset($_SESSION['user_id'])) {
                         <option value="2024">2024</option>
                         <option value="2025">2025</option>
                     </select>
-
-
                 </div>
 
                 <button type="submit" class="historial-boton">Buscar</button>
