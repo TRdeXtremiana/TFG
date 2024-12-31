@@ -166,12 +166,7 @@ form {
 	padding: 2em;
 	background-color: #000000;
 	border-radius: 8px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	transition: all 0.3s ease;
-}
-
-form:hover {
-	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 label {
@@ -372,6 +367,10 @@ button:hover {
 
 .historial-boton:hover {
     background-color: #8184f5;
+}
+
+.editarHistorial{
+background-color: #121212;
 }
 
 /* Editar */
