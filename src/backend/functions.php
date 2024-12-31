@@ -1,97 +1,139 @@
 <?php
 include('models/database.php');
 
-function getUserData($userId)
+class UserManager
 {
-    $pdo = Database::connect();
-
-    try {
-        $stmt = $pdo->prepare("SELECT nombre_usuario, descripcion, foto_perfil FROM usuarios WHERE id_usuario = :id");
-        $stmt->execute([':id' => $userId]);
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        return null;
-    }
-}
-
-function updateUserName($userId, $newUserName)
-{
-    $pdo = Database::connect();
-
-    if (empty($newUserName)) {
-        return "El nombre no puede estar vacío.";
+    private static function executeQuery($query, $params)
+    {
+        $pdo = Database::connect();
+        try {
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (PDOException $e) {
+            return null;
+        }
     }
 
-    try {
-        $stmt = $pdo->prepare("UPDATE usuarios SET nombre_usuario = :nombre WHERE id_usuario = :id");
-        $stmt->execute([
+    public static function getUserData($userId)
+    {
+        $query = "SELECT nombre_usuario, descripcion, foto_perfil FROM usuarios WHERE id_usuario = :id";
+        $stmt = self::executeQuery($query, [':id' => $userId]);
+        return $stmt ? $stmt->fetch(PDO::FETCH_ASSOC) : null;
+    }
+
+    public static function updateUserName($userId, $newUserName)
+    {
+        if (empty($newUserName)) {
+            return ['message' => "El nombre no puede estar vacío.", 'class' => 'error'];
+        }
+
+        // Obtener el nombre actual del usuario
+        $currentData = self::getUserData($userId);
+        if ($currentData && $currentData['nombre_usuario'] === $newUserName) {
+            // Si el nombre es igual, no hacemos nada ni mostramos mensaje
+            return null;
+        }
+
+        // Verificar si el nombre de usuario ya existe para otro usuario
+        $queryCheck = "SELECT id_usuario FROM usuarios WHERE nombre_usuario = :nombre AND id_usuario != :id";
+        $stmtCheck = self::executeQuery($queryCheck, [
             ':nombre' => $newUserName,
             ':id' => $userId
         ]);
 
-        $_SESSION['user_name'] = $newUserName;
-        return "Nombre de usuario actualizado correctamente.";
-    } catch (PDOException $e) {
-        return "Error al actualizar el nombre de usuario: " . $e->getMessage();
+        if ($stmtCheck && $stmtCheck->rowCount() > 0) {
+            return ['message' => "El nombre de usuario ya está en uso.", 'class' => 'error'];
+        }
+
+        // Actualizar el nombre de usuario
+        $queryUpdate = "UPDATE usuarios SET nombre_usuario = :nombre WHERE id_usuario = :id";
+        $stmtUpdate = self::executeQuery($queryUpdate, [
+            ':nombre' => $newUserName,
+            ':id' => $userId
+        ]);
+
+        if ($stmtUpdate) {
+            $_SESSION['user_name'] = $newUserName;
+            return ['message' => "Nombre de usuario actualizado correctamente.", 'class' => 'exito'];
+        }
+
+        return ['message' => "Error al actualizar el nombre de usuario.", 'class' => 'error'];
     }
-}
 
-function updateDescription($userId, $newDescription)
-{
-    $pdo = Database::connect();
+    public static function updateDescription($userId, $newDescription)
+    {
+        if (empty($newDescription)) {
+            return ['message' => "La descripción no puede estar vacía.", 'class' => 'error'];
+        }
 
-    try {
-        $stmt = $pdo->prepare("UPDATE usuarios SET descripcion = :descripcion WHERE id_usuario = :id");
-        $stmt->execute([
+        if (strlen($newDescription) > 150) {
+            return ['message' => "La descripción no puede tener más de 150 caracteres.", 'class' => 'error'];
+        }
+
+        // Obtener la descripción actual del usuario
+        $currentData = self::getUserData($userId);
+        if ($currentData && $currentData['descripcion'] === $newDescription) {
+            // Si la descripción es igual, no hacemos nada ni mostramos mensaje
+            return null;
+        }
+
+        // Actualizar la descripción
+        $query = "UPDATE usuarios SET descripcion = :descripcion WHERE id_usuario = :id";
+        $stmt = self::executeQuery($query, [
             ':descripcion' => $newDescription,
             ':id' => $userId
         ]);
 
-        $_SESSION['description'] = $newDescription;
-        return "Descripción actualizada correctamente.";
-    } catch (PDOException $e) {
-        return "Error al actualizar la descripción: " . $e->getMessage();
-    }
-}
+        if ($stmt) {
+            $_SESSION['description'] = $newDescription;
+            return ['message' => "Descripción actualizada correctamente.", 'class' => 'exito'];
+        }
 
-function updateProfilePicture($userId, $file)
-{
-    // Ruta al directorio de imágenes
-    $targetDir = __DIR__ . "../assets/images/profileImages/";
-
-    // Crear la carpeta si no existe
-    if (!is_dir($targetDir)) {
-        mkdir($targetDir, 0777, true);
+        return ['message' => "Error al actualizar la descripción.", 'class' => 'error'];
     }
 
-    $fileName = basename($file['name']);
-    $targetFile = $targetDir . $fileName;
+    public static function updateProfilePicture($userId, $file)
+    {
+        $targetDir = __DIR__ . "/../assets/images/profileImages/";
+        if (!file_exists($targetDir) && !mkdir($targetDir, 0777, true)) {
+            return ['message' => "Error: No se pudo crear el directorio de destino.", 'class' => 'error'];
+        }
 
-    // Validar el archivo subido
-    if ($file['error'] !== UPLOAD_ERR_OK) {
-        return "Error al subir el archivo: " . $file['error'];
-    }
+        $fileName = basename($file['name']);
+        $targetFile = $targetDir . $fileName;
 
-    // Mover el archivo a la carpeta de destino
-    if (!move_uploaded_file($file['tmp_name'], $targetFile)) {
-        return "Error al mover el archivo a la carpeta de destino.";
-    }
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            return ['message' => "Error al subir el archivo: Código de error " . $file['error'], 'class' => 'error'];
+        }
 
-    $pdo = Database::connect();
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileType = mime_content_type($file['tmp_name']);
+        if (!in_array($fileType, $allowedTypes)) {
+            return ['message' => "Error: El archivo debe ser una imagen válida (JPEG, PNG, GIF).", 'class' => 'error'];
+        }
 
-    try {
-        // Guardar la ruta relativa en la base de datos
-        $relativePath = "src/assets/images/profileImages/" . $fileName;
-        $stmt = $pdo->prepare("UPDATE usuarios SET foto_perfil = :foto WHERE id_usuario = :id");
-        $stmt->execute([
+        $currentData = self::getUserData($userId);
+        $relativePath = "assets/images/profileImages/" . $fileName;
+        if ($currentData && $currentData['foto_perfil'] === $relativePath) {
+            return ['message' => "La foto de perfil no ha cambiado.", 'class' => 'error'];
+        }
+
+        if (!move_uploaded_file($file['tmp_name'], $targetFile)) {
+            return ['message' => "Error al mover el archivo a la carpeta de destino.", 'class' => 'error'];
+        }
+
+        $query = "UPDATE usuarios SET foto_perfil = :foto WHERE id_usuario = :id";
+        $stmt = self::executeQuery($query, [
             ':foto' => $relativePath,
             ':id' => $userId
         ]);
 
-        $_SESSION['profile_picture'] = $relativePath;
-        return "Foto de perfil actualizada correctamente.";
-    } catch (PDOException $e) {
-        return "Error al actualizar la foto de perfil: " . $e->getMessage();
+        if ($stmt) {
+            $_SESSION['profile_picture'] = $relativePath;
+            return ['message' => "Foto de perfil actualizada correctamente.", 'class' => 'exito'];
+        }
+
+        return ['message' => "Error al actualizar la foto de perfil.", 'class' => 'error'];
     }
 }
