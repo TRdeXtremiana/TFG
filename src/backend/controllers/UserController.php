@@ -47,7 +47,7 @@ function registrarUsuario($nombre_usuario, $correo, $contrasena)
         $query->execute([
             'nombre_usuario' => $nombre_usuario,
             'correo' => $correo,
-            'contrasena' => password_hash($contrasena, PASSWORD_BCRYPT), // Encriptar la contraseña
+            'contrasena' => password_hash($contrasena, PASSWORD_BCRYPT),
         ]);
     } catch (PDOException $e) {
         // Manejo de errores de base de datos
