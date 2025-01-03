@@ -95,7 +95,7 @@ class UserManager
 
     public static function updateProfilePicture($userId, $file)
     {
-        $targetDir = __DIR__ . "/../assets/images/profileImages/";
+        $targetDir = __DIR__ . '/../assets/images/profileImages/';
         if (!file_exists($targetDir) && !mkdir($targetDir, 0777, true)) {
             return ['message' => "Error: No se pudo crear el directorio de destino.", 'class' => 'error'];
         }
@@ -114,7 +114,7 @@ class UserManager
         }
 
         $currentData = self::getUserData($userId);
-        $relativePath = "assets/images/profileImages/" . $fileName;
+        $relativePath = 'assets/images/profileImages/' . $fileName;
         if ($currentData && $currentData['foto_perfil'] === $relativePath) {
             return ['message' => "La foto de perfil no ha cambiado.", 'class' => 'error'];
         }
