@@ -87,7 +87,7 @@ async function editExpense(expenseData) {
             const data = await response.json();
             showExpenseMessage(data.message || 'Gasto añadido con éxito', true);
             
-            window.location.href = 'history.php';
+            window.location.href = 'history.php?anio=' + expenseData.date.split('-')[0] + '&mes=' + expenseData.date.split('-')[1];
         } else {
             const error = await response.json();
             showExpenseMessage(error.error || 'Error al añadir el gasto', false);
