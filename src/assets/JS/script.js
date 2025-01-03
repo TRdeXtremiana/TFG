@@ -77,6 +77,7 @@ function handleEditFormSubmit(event) {
 async function editExpense(expenseData) {
     const button = document.getElementById('edit-button');
     const spinner = document.getElementById('spinner');
+
     button.disabled = true;
     spinner.classList.remove('hidden');
 
@@ -127,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .then((data) => {
                         if (data.success) {
                             alert(data.message);
-                            window.location.href = "index.php"; // Redirigir tras eliminar
+                            window.location.href = "index.php"; 
                         } else {
                             alert(data.error || "Error al eliminar el registro.");
                         }

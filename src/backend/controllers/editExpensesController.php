@@ -19,15 +19,20 @@ try {
         $data = json_decode($input, true);
 
         // Validar datos
-        if (!$data || !isset($data['id'])) {
+        if (!$data || !isset($data['id'], $data['amount'], $data['category'], $data['date'])) {
             jsonResponse(['error' => 'Datos inválidos.'], 400);
             exit();
         }
 
         $id = (int)$data['id'];
+        $amount = (float)$data['amount'];
+        $category = (int)$data['category'];
+        $description = isset($data['description']) ? trim($data['description']) : null;
+        $date = $data['date'];
 
-        if ($id <= 0) {
-            jsonResponse(['error' => 'ID de gasto inválido.'], 400);
+        // Validar campos
+        if ($id <= 0 || $amount <= 0 || $category <= 0 || empty($date)) {
+            jsonResponse(['error' => 'Campos inválidos.'], 400);
             exit();
         }
 
@@ -35,13 +40,25 @@ try {
         $db = Database::connect();
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Marcar como eliminado
-        $query = 'UPDATE gastos SET eliminado = 1, fecha_actualizacion = NOW() WHERE id_gasto = :id_gasto';
+        // Actualizar el gasto
+        $query = 'UPDATE gastos 
+                  SET cantidad = :amount, 
+                      id_etiqueta = :category, 
+                      descripcion = :description, 
+                      fecha_gasto = :date, 
+                      fecha_actualizacion = NOW() 
+                  WHERE id_gasto = :id_gasto';
         $stmt = $db->prepare($query);
-        $stmt->execute([':id_gasto' => $id]);
+        $stmt->execute([
+            ':amount' => $amount,
+            ':category' => $category,
+            ':description' => $description,
+            ':date' => $date,
+            ':id_gasto' => $id
+        ]);
 
         // Respuesta exitosa
-        jsonResponse(['success' => true, 'message' => 'Gasto marcado como eliminado.']);
+        jsonResponse(['success' => true, 'message' => 'Gasto actualizado correctamente.']);
     } else {
         // Método no permitido
         jsonResponse(['error' => 'Método no permitido'], 405);
