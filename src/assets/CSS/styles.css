@@ -62,8 +62,6 @@ header button {
 
 /* Contenedor Principal */
 main {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	gap: 2em;
 	padding: 2em;
 	max-width: 1200px;
@@ -363,7 +361,6 @@ background-color: #121212;
 
 .tabla-historial {
     flex: 3; 
-    max-height: 70vh; 
 }
 
 .historial-total {
@@ -453,41 +450,136 @@ background-color: #121212;
 }
 
 @media (max-width: 768px) {
+    /* General */
+    body {
+        font-size: 13px; /* Tamaño reducido para todo el contenido */
+    }
+
+	main{
+		overflow: hidden;
+	}
+
     header {
-        padding: 1em;
-    }
-
-    main {
-        grid-template-columns: 1fr;
-    }
-
-    #desktop-menu {
-        display: none;
-    }
-
-    header button {
-        display: block;
-    }
-
-    #mobile-menu {
         display: flex;
-        width: 250px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5em;
+        background-color: #1f1f1f;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid #333;
     }
 
-    #mobile-menu.open {
-        left: 0;
+    header h1 {
+        font-size: 0.9em;
+        margin: 0;
     }
-}
 
-@media (max-width: 480px) {
-    .container {
-        padding: 1em;
+    header nav {
+        display: flex;
+        gap: 0.2em;
+    }
+
+    header a {
+        font-size: 0.8em; 
+        padding: 0.5em 0;
+    }
+
+    /* Formularios */
+	form {
+		width: 80%;
+		background-color: #000000;
+		border-radius: 8px;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	}
+	
+
+    input, button, select {
+        font-size: 0.85em;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border: 1px solid #333;
     }
 
     button {
-        font-size: 0.9em;
+        background-color: #8184f5;
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #03dac6;
+    }
+
+    /* Listados y tablas */
+    #expenses-list {
+        flex-direction: column;
+        gap: 1em;
+    }
+
+    .tabla-historial, .historial-categorias-tabla {
+        overflow: hidden; /* Eliminamos scroll horizontal */
+        font-size: 0.75em; /* Tamaño reducido */
+    }
+
+    /* Historial */
+.historial {
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Asegura que los elementos hijos se apilen verticalmente */
+}
+
+.historialContainer {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto; /* Permite desplazamiento horizontal si es necesario */
+}
+
+.dt-container {
+    width: 90%; 
+    max-width: 100%; /* Evita que se desborde del contenedor */
+    margin: 0 auto; /* Centra la tabla */
+    border-collapse: collapse; /* Hace que las celdas compartan bordes */
+}
+
+.historial-tabla{
+    width: 1%; 
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.historial-total {
+    font-size: 0.8em;
+    padding: 0.5em;
+    text-align: center;
+}
+
+.historial-total h2 {
+    font-size: 0.9em;
+    margin: 0;
+}
+
+
+    /* Perfil */
+
+    #fotoPerfil img {
+        width: 80px;
+        height: 80px;
+    }
+
+    #descripcion {
+        text-align: center;
+        font-size: 0.8em;
     }
 }
+
+
 
 /* Animaciones */
 @keyframes fadeIn {
