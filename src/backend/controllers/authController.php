@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../models/database.php';
 
 /**
- * Verificar las credenciales del usuario.
+ * Confirmar las credenciales del usuario.
  */
 function verifyCredentials($identifier, $contrasena)
 {
@@ -20,7 +20,7 @@ function verifyCredentials($identifier, $contrasena)
 
 	$usuario = $stmt->fetch();
 
-	// Verificar si la contraseña coincide
+	// Confirmar si la contraseña coincide
 	if ($usuario && password_verify($contrasena, $usuario['contrasena'])) {
 		return $usuario;
 	}

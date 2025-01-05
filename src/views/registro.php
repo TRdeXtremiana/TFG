@@ -1,25 +1,25 @@
 <?php
 session_start();
-require_once '../backend/controllers/UserController.php'; // Ruta al archivo con la lógica
+require_once '../backend/controllers/UserController.php';
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	// Obtener y limpiar los datos del formulario
-	$nombre = htmlspecialchars($_POST['nombre'] ?? '');
-	$email = htmlspecialchars($_POST['email'] ?? '');
-	$password = $_POST['password'] ?? '';
+    // Coger y limpiar los datos del formulario
+    $nombre = htmlspecialchars($_POST['nombre'] ?? '');
+    $email = htmlspecialchars($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-	// Intentar registrar al usuario
-	$resultado = registrarUsuario($nombre, $email, $password);
-	if ($resultado === true) {
-		// Guardar el nombre en la sesión y redirigir a index.php
-		$_SESSION['user_name'] = $nombre;
-		$_SESSION['email'] = $email; // Opcional: guardar correo si es necesario
-		header('Location: ./index.php'); // Redirigir al index
-		exit();
-	} else {
-		$error = $resultado; // Error devuelto desde la función
-	}
+    // Intentar registrar al usuario
+    $resultado = registrarUsuario($nombre, $email, $password);
+    if ($resultado === true) {
+        // Guardar el nombre en la sesión y redirigir a index.php
+        $_SESSION['user_name'] = $nombre;
+        $_SESSION['email'] = $email;
+        header('Location: ./index.php');
+        exit();
+    } else {
+        $error = $resultado; // Error devuelto desde la función
+    }
 }
 ?>
 
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <div class="login-container">
-        <!-- Mostrar mensaje de error si existe -->
+        <!-- Enseñar mensaje de error (si existe ) -->
         <?php if ($error): ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>

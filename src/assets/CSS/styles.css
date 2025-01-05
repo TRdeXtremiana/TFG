@@ -471,7 +471,7 @@ background-color: #121212;
 
     header nav {
         display: flex;
-        justify-content: space-evenly; /* Espaciado igual entre todos los enlaces */
+        justify-content: space-evenly; 
         align-items: center;
         gap: 0.2em;
         width: 100%;
@@ -519,8 +519,8 @@ background-color: #121212;
     }
 
     .tabla-historial, .historial-categorias-tabla {
-        overflow: hidden; /* Eliminamos scroll horizontal */
-        font-size: 0.75em; /* Tamaño reducido */
+        overflow: hidden; 
+        font-size: 0.75em; 
     }
 
     /* Historial */
@@ -529,7 +529,7 @@ background-color: #121212;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Asegura que los elementos hijos se apilen verticalmente */
+    flex-direction: column; 
 }
 
 .historialContainer {
@@ -552,7 +552,7 @@ background-color: #121212;
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    white-space: nowrap; /* Evita saltos de línea en celdas largas */
+    white-space: nowrap; 
 }
 
 #tablaGastos th, #tablaGastos td {

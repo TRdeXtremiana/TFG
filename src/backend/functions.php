@@ -35,7 +35,7 @@ class UserManager
             return null;
         }
 
-        // Verificar si el nombre de usuario ya existe para otro usuario
+        // Confirmar si el nombre de usuario ya existe para otro usuario
         $queryCheck = "SELECT id_usuario FROM usuarios WHERE nombre_usuario = :nombre AND id_usuario != :id";
         $stmtCheck = self::executeQuery($queryCheck, [
             ':nombre' => $newUserName,
@@ -116,7 +116,7 @@ class UserManager
             return ['message' => "Error: El archivo debe ser una imagen válida (JPEG, PNG, GIF).", 'class' => 'error'];
         }
 
-        // Verificar si el archivo con el mismo nombre ya existe
+        // Confirmar si el archivo con el mismo nombre ya existe
         $currentData = self::getUserData($userId);
         $currentProfilePicture = $currentData['foto_perfil'] ?? null;
 

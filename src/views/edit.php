@@ -4,7 +4,7 @@ session_start();
 
 require_once __DIR__ . '/../backend/models/Database.php';
 
-// Verificar si el usuario está logueado
+// Comprobar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
@@ -75,7 +75,7 @@ if (!isset($_POST['id'])) {
             </form>
 
 
-            <!-- Span para mensajes dinámicos -->
+            <!-- Span para los  mensajes dinámicos -->
             <span id="expense-message" class="hidden"></span>
         </section>
 

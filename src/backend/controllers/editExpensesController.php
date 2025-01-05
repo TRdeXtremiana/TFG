@@ -5,7 +5,7 @@ require_once '../utils/utils.php';
 try {
     session_start();
 
-    // Verificar autenticación
+    // Confirmar autenticación
     if (!isset($_SESSION['user_id'])) {
         jsonResponse(['error' => 'Usuario no autenticado'], 403);
         exit();

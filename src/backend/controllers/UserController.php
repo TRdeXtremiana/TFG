@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../models/database.php';
 
 /**
- * Verificar si el nombre de usuario ya está registrado.
+ * Confirmar si el nombre de usuario ya está registrado.
  */
 function isUsernameRegistered($nombre_usuario)
 {
@@ -14,7 +14,7 @@ function isUsernameRegistered($nombre_usuario)
 }
 
 /**
- * Verificar si el correo ya está registrado.
+ * Confirmar si el correo ya está registrado.
  */
 function isEmailRegistered($correo)
 {
@@ -31,12 +31,12 @@ function registrarUsuario($nombre_usuario, $correo, $contrasena)
 {
     $pdo = Database::connect();
 
-    // Verificar si el nombre de usuario ya está registrado
+    // Confirmar si el nombre de usuario ya está registrado
     if (isUsernameRegistered($nombre_usuario)) {
         return "El nombre de usuario ya está en uso.";
     }
 
-    // Verificar si el correo ya está registrado
+    // Confirmar si el correo ya está registrado
     if (isEmailRegistered($correo)) {
         return "El correo electrónico ya está registrado.";
     }
