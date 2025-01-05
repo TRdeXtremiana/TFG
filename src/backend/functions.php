@@ -116,6 +116,15 @@ class UserManager
             return ['message' => "Error: El archivo debe ser una imagen válida (JPEG, PNG, GIF).", 'class' => 'error'];
         }
 
+        // Verificar si el archivo con el mismo nombre ya existe
+        $currentData = self::getUserData($userId);
+        $currentProfilePicture = $currentData['foto_perfil'] ?? null;
+
+        if ($currentProfilePicture && $currentProfilePicture === 'assets/images/profileImages/' . $userId . '/' . $fileName) {
+            return ['message' => "Error: Ya existe una foto de perfil con ese nombre. Cambie el nombre del archivo e intente nuevamente.", 'class' => 'error'];
+        }
+
+        // Mover el archivo a la carpeta del usuario
         if (!move_uploaded_file($file['tmp_name'], $targetFile)) {
             return ['message' => "Error al mover el archivo a la carpeta del usuario.", 'class' => 'error'];
         }
