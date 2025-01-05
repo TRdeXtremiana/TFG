@@ -1,3 +1,4 @@
+// Subfunción para manejar la configuración y ejecución de peticiones
 async function postData(url, data) {
     return await fetch(url, {
         method: "POST",
@@ -6,6 +7,7 @@ async function postData(url, data) {
     });
 }
 
+// Subfunción para mostrar mensajes al usuario
 function showExpenseMessage(message, isSuccess) {
     const messageSpan = document.getElementById('expense-message');
     messageSpan.textContent = message;
@@ -13,89 +15,63 @@ function showExpenseMessage(message, isSuccess) {
     messageSpan.classList.remove('hidden');
 }
 
-async function addExpense(expenseData) {
-    const button = document.getElementById('submit-button');
-    const spinner = document.getElementById('spinner');
-    button.disabled = true;
-    spinner.classList.remove('hidden');
+// Subfunción para gestionar el estado del botón y el spinner
+function toggleButtonAndSpinner(buttonId, spinnerId, isLoading) {
+    const button = document.getElementById(buttonId);
+    const spinner = document.getElementById(spinnerId);
+    button.disabled = isLoading;
+    spinner.classList.toggle('hidden', !isLoading);
+}
 
+// Subfunción para validar el formulario de gastos
+function validateExpenseForm(amount) {
+    if (!amount || amount <= 0) {
+        showExpenseMessage('La cantidad debe ser mayor que 0', false);
+        return false;
+    }
+    return true;
+}
+
+// Subfunción genérica para manejar respuestas del servidor
+async function handleResponse(response, successMessage, redirectUrl = null) {
+    if (response.ok) {
+        const data = await response.json();
+        showExpenseMessage(data.message || successMessage, true);
+        if (redirectUrl) window.location.href = redirectUrl;
+    } else {
+        const error = await response.json();
+        showExpenseMessage(error.error || 'Error en la operación', false);
+    }
+}
+
+// Función para añadir un gasto
+async function addExpense(expenseData) {
+    toggleButtonAndSpinner('submit-button', 'spinner', true);
     try {
         const response = await postData("../backend/controllers/expensesController.php", expenseData);
-        if (response.ok) {
-            const data = await response.json();
-            showExpenseMessage(data.message || 'Gasto añadido con éxito', true);
-        } else {
-            const error = await response.json();
-            showExpenseMessage(error.error || 'Error al añadir el gasto', false);
-        }
+        await handleResponse(response, 'Gasto añadido con éxito');
     } catch (error) {
         showExpenseMessage('Error al conectar con el servidor', false);
     } finally {
-        button.disabled = false;
-        spinner.classList.add('hidden');
+        toggleButtonAndSpinner('submit-button', 'spinner', false);
     }
 }
 
-function handleExpenseFormSubmit(event) {
-    event.preventDefault();
-    const messageSpan = document.getElementById('expense-message');
-    const amount = document.getElementById("amount").value;
-    const category = document.getElementById("category").value;
-    const description = document.getElementById("description").value || null;
-    const date = document.getElementById("date").value;
-
-    if (!amount || amount <= 0) {
-        showExpenseMessage('La cantidad debe ser mayor que 0', false);
-        return;
-    }
-
-    messageSpan.classList.add('hidden');
-    messageSpan.textContent = '';
-    addExpense({ amount, category, description, date });
-}
-
-function handleEditFormSubmit(event) {
-    event.preventDefault();
-    const id = document.getElementById("id").value;
-    const amount = document.getElementById("amount").value;
-    const category = document.getElementById("category").value;
-    const description = document.getElementById("description").value || null;
-    const date = document.getElementById("date").value;
-
-    if (!amount || amount <= 0) {
-        showExpenseMessage('La cantidad debe ser mayor que 0', false);
-        return;
-    }
-
-    editExpense({ id, amount, category, description, date });
-}
-
+// Función para editar un gasto
 async function editExpense(expenseData) {
-    const button = document.getElementById('edit-button');
-    const spinner = document.getElementById('spinner');
-
-    button.disabled = true;
-    spinner.classList.remove('hidden');
-
+    toggleButtonAndSpinner('edit-button', 'spinner', true);
     try {
         const response = await postData("../backend/controllers/editExpensesController.php", expenseData);
-        if (response.ok) {
-            const data = await response.json();
-            showExpenseMessage(data.message || 'Gasto actualizado con éxito', true);
-
-            window.location.href = 'history.php?anio=' + expenseData.date.split('-')[0] + '&mes=' + expenseData.date.split('-')[1];
-        } else {
-            const error = await response.json();
-            showExpenseMessage(error.error || 'Error al añadir el gasto', false);
-        }
+        const redirectUrl = `history.php?anio=${expenseData.date.split('-')[0]}&mes=${expenseData.date.split('-')[1]}`;
+        await handleResponse(response, 'Gasto actualizado con éxito', redirectUrl);
     } catch (error) {
         showExpenseMessage('Error al conectar con el servidor', false);
     } finally {
-        button.disabled = false;
-        spinner.classList.add('hidden');
+        toggleButtonAndSpinner('edit-button', 'spinner', false);
     }
 }
 
+// Función para eliminar un gasto
 async function deleteExpense(expenseId, expenseDate) {
     if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
         try {
@@ -120,28 +96,48 @@ async function deleteExpense(expenseId, expenseDate) {
     }
 }
 
+// Manejo del formulario de añadir gasto
+function handleExpenseFormSubmit(event) {
+    event.preventDefault();
+    const amount = document.getElementById("amount").value;
+    if (!validateExpenseForm(amount)) return;
+
+    const category = document.getElementById("category").value;
+    const description = document.getElementById("description").value || null;
+    const date = document.getElementById("date").value;
+    addExpense({ amount, category, description, date });
+}
+
+// Manejo del formulario de edición de gasto
+function handleEditFormSubmit(event) {
+    event.preventDefault();
+    const amount = document.getElementById("amount").value;
+    if (!validateExpenseForm(amount)) return;
+
+    const id = document.getElementById("id").value;
+    const category = document.getElementById("category").value;
+    const description = document.getElementById("description").value || null;
+    const date = document.getElementById("date").value;
+    editExpense({ id, amount, category, description, date });
+}
+
+// Inicialización de eventos
 function init() {
     const expenseForm = document.getElementById("expense-form");
-    if (expenseForm) {
-        expenseForm.addEventListener("submit", handleExpenseFormSubmit);
-    }
+    if (expenseForm) expenseForm.addEventListener("submit", handleExpenseFormSubmit);
 
     const editForm = document.getElementById("edit-form");
-    if (editForm) {
-        editForm.addEventListener("submit", handleEditFormSubmit);
-    }
+    if (editForm) editForm.addEventListener("submit", handleEditFormSubmit);
 
     const deleteButton = document.getElementById('delete-button');
     if (deleteButton) {
         deleteButton.addEventListener('click', function () {
             const id = document.getElementById('id').value;
             const date = document.getElementById('date').value;
-
             if (!id || !date) {
                 alert("Datos incompletos. Por favor, verifica el formulario.");
                 return;
             }
-
             deleteExpense(id, date);
         });
     }
