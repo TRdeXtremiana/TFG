@@ -44,8 +44,7 @@ if (!isset($_POST['id'])) {
                 <input type="hidden" id="id" name="id" value="<?= $expense['id_gasto'] ?>">
 
                 <label for="amount">Cantidad:</label>
-                <input type="number" id="amount" name="amount" step="any" required min="0.01"
-                    value="<?= $expense['cantidad'] ?>">
+                <input type="number" id="amount" name="amount" step="any" value="<?= $expense['cantidad'] ?>">
 
                 <label for="category">Categoría:</label>
                 <select id="category" name="category">
