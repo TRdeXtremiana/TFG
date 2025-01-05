@@ -15,8 +15,37 @@ try {
         $input = file_get_contents('php://input');
         $data = json_decode($input, true);
 
-        // Validar datos principales
-        if (!$data || !isset($data['id'], $data['amount'], $data['category'], $data['date'])) {
+        if (!$data) {
+            jsonResponse(['error' => 'Datos incompletos.'], 400);
+            exit();
+        }
+
+        // Manejo de eliminación
+        if (isset($data['id']) && count($data) === 1) {
+            $id = (int)$data['id'];
+
+            if ($id <= 0) {
+                jsonResponse(['error' => 'ID inválido.'], 400);
+                exit();
+            }
+
+            $db = Database::connect();
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $query = 'DELETE FROM gastos WHERE id_gasto = :id_gasto';
+            $stmt = $db->prepare($query);
+            $stmt->execute([':id_gasto' => $id]);
+
+            if ($stmt->rowCount() > 0) {
+                jsonResponse(['success' => true, 'message' => 'Registro eliminado correctamente.']);
+            } else {
+                jsonResponse(['error' => 'No se encontró el registro.'], 404);
+            }
+            exit();
+        }
+
+        // Validar datos principales para edición
+        if (!isset($data['id'], $data['amount'], $data['category'], $data['date'])) {
             jsonResponse(['error' => 'Datos incompletos.'], 400);
             exit();
         }
@@ -43,8 +72,8 @@ try {
             exit();
         }
 
-        if (strlen($description) > 150) {
-            jsonResponse(['error' => 'La descripción no puede superar los 150 caracteres.'], 400);
+        if (strlen($description) > 255) {
+            jsonResponse(['error' => 'La descripción no puede superar los 255 caracteres.'], 400);
             exit();
         }
 
@@ -81,7 +110,7 @@ try {
 
         jsonResponse(['success' => true, 'message' => 'Gasto actualizado correctamente.']);
     } else {
-        jsonResponse(['error' => 'Método no permitido'], 405);
+        jsonResponse(['error' => 'Método no permitido.'], 405);
     }
 } catch (PDOException $e) {
     error_log('Error en la consulta SQL: ' . $e->getMessage());

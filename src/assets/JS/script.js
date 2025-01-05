@@ -11,7 +11,6 @@ function showExpenseMessage(message, isSuccess) {
     messageSpan.textContent = message;
     messageSpan.className = isSuccess ? 'exito' : 'error';
     messageSpan.classList.remove('hidden');
-
 }
 
 async function addExpense(expenseData) {
@@ -37,10 +36,8 @@ async function addExpense(expenseData) {
     }
 }
 
-
 function handleExpenseFormSubmit(event) {
     event.preventDefault();
-    event.stopPropagation();
     const messageSpan = document.getElementById('expense-message');
     const amount = document.getElementById("amount").value;
     const category = document.getElementById("category").value;
@@ -56,7 +53,6 @@ function handleExpenseFormSubmit(event) {
     messageSpan.textContent = '';
     addExpense({ amount, category, description, date });
 }
-
 
 function handleEditFormSubmit(event) {
     event.preventDefault();
@@ -85,8 +81,8 @@ async function editExpense(expenseData) {
         const response = await postData("../backend/controllers/editExpensesController.php", expenseData);
         if (response.ok) {
             const data = await response.json();
-            showExpenseMessage(data.message || 'Gasto añadido con éxito', true);
-            
+            showExpenseMessage(data.message || 'Gasto actualizado con éxito', true);
+
             window.location.href = 'history.php?anio=' + expenseData.date.split('-')[0] + '&mes=' + expenseData.date.split('-')[1];
         } else {
             const error = await response.json();
@@ -100,48 +96,55 @@ async function editExpense(expenseData) {
     }
 }
 
-function init() {
-    let expense=document.getElementById("expense-form");
-    if(expense)
-        expense.addEventListener("submit", handleExpenseFormSubmit);
-
-    let edit=document.getElementById("edit-form");
-    if(edit)
-        edit.addEventListener("submit", handleEditFormSubmit);
+async function deleteExpense(expenseId, expenseDate) {
+    if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
+        try {
+            const response = await postData("../backend/controllers/editExpensesController.php", { id: expenseId });
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    alert(data.message);
+                    const [year, month] = expenseDate.split('-');
+                    window.location.href = `history.php?anio=${year}&mes=${month}`;
+                } else {
+                    alert(data.error || "Error al eliminar el registro.");
+                }
+            } else {
+                const error = await response.json();
+                alert(error.error || "Error al eliminar el registro.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error al procesar la solicitud.");
+        }
+    }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    init();
+function init() {
+    const expenseForm = document.getElementById("expense-form");
+    if (expenseForm) {
+        expenseForm.addEventListener("submit", handleExpenseFormSubmit);
+    }
+
+    const editForm = document.getElementById("edit-form");
+    if (editForm) {
+        editForm.addEventListener("submit", handleEditFormSubmit);
+    }
 
     const deleteButton = document.getElementById('delete-button');
     if (deleteButton) {
         deleteButton.addEventListener('click', function () {
             const id = document.getElementById('id').value;
+            const date = document.getElementById('date').value;
 
-            if (confirm('¿Estás seguro de que deseas eliminar este registro?')) {
-                fetch("../backend/controllers/editExpensesController.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ id }),
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.success) {
-                            alert(data.message);
-                            window.location.href = "index.php"; 
-                        } else {
-                            alert(data.error || "Error al eliminar el registro.");
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error:", error);
-                        alert("Error al procesar la solicitud.");
-                    });
+            if (!id || !date) {
+                alert("Datos incompletos. Por favor, verifica el formulario.");
+                return;
             }
+
+            deleteExpense(id, date);
         });
     }
-});
+}
 
 document.addEventListener("DOMContentLoaded", init);
