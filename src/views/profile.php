@@ -9,53 +9,53 @@ session_start();
 $userId = $_SESSION['user_id'] ?? null;
 
 if ($userId) {
-	$userData = UserManager::getUserData($userId);
+    $userData = UserManager::getUserData($userId);
 
-	// Asignar valores de la base de datos o predeterminados
-	$user_name = $userData['nombre_usuario'] ?? 'Usuario';
-	$description = $userData['descripcion'] ?? 'No tienes una descripción configurada.';
-	$profile_picture = $userData['foto_perfil'] ?? '../assets/images/account-circle.svg';
+    // Asignar valores de la base de datos o predeterminados
+    $user_name = $userData['nombre_usuario'] ?? 'Usuario';
+    $description = $userData['descripcion'] ?? 'No tienes una descripción configurada.';
+    $profile_picture = $userData['foto_perfil'] ?? '../assets/images/account-circle.svg';
 
-	// Verificar si el archivo existe físicamente
-	if (!file_exists(__DIR__ . '/../' . $profile_picture)) {
-		$profile_picture = '../assets/images/account-circle.svg';
-	}
+    // Verificar si el archivo existe físicamente
+    if (!file_exists(__DIR__ . '/../' . $profile_picture)) {
+        $profile_picture = '../assets/images/account-circle.svg';
+    }
 } else {
-	// Valores predeterminados si no hay sesión
-	$user_name = 'Usuario';
-	$description = 'No tienes una descripción configurada.';
-	$profile_picture = '../assets/images/account-circle.svg';
+    // Valores predeterminados si no hay sesión
+    $user_name = 'Usuario';
+    $description = 'No tienes una descripción configurada.';
+    $profile_picture = '../assets/images/account-circle.svg';
 }
 
 // Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
-	$messages = []; // Array para mensajes con clases
-	if (isset($_POST['user_name'])) {
-		$response = UserManager::updateUserName($userId, $_POST['user_name']);
-		$messages[] = $response;
-	}
+    $messages = []; // Array para mensajes con clases
+    if (isset($_POST['user_name'])) {
+        $response = UserManager::updateUserName($userId, $_POST['user_name']);
+        $messages[] = $response;
+    }
 
-	if (isset($_POST['description'])) {
-		$response = UserManager::updateDescription($userId, $_POST['description']);
-		$messages[] = $response;
-	}
+    if (isset($_POST['description'])) {
+        $response = UserManager::updateDescription($userId, $_POST['description']);
+        $messages[] = $response;
+    }
 
-	if (!empty($_FILES['profile_picture']['name'])) {
-		$response = UserManager::updateProfilePicture($userId, $_FILES['profile_picture']);
-		$messages[] = $response;
-	}
+    if (!empty($_FILES['profile_picture']['name'])) {
+        $response = UserManager::updateProfilePicture($userId, $_FILES['profile_picture']);
+        $messages[] = $response;
+    }
 
-	// Recargar los datos del usuario
-	$userData = UserManager::getUserData($userId);
-	$user_name = $userData['nombre_usuario'] ?? $user_name;
-	$description = $userData['descripcion'] ?: 'No tienes una descripción configurada.';
-	$profile_picture = '../' . $userData['foto_perfil'] ?? '../assets/images/account-circle.svg';
+    // Recargar los datos del usuario
+    $userData = UserManager::getUserData($userId);
+    $user_name = $userData['nombre_usuario'] ?? $user_name;
+    $description = $userData['descripcion'] ?: 'No tienes una descripción configurada.';
+    $profile_picture = '../' . $userData['foto_perfil'] ?? '../assets/images/account-circle.svg';
 
-	// var_dump($profile_picture);
+    // var_dump($profile_picture);
 
-	if (!file_exists($profile_picture)) {
-		$profile_picture = '../assets/images/account-circle.svg';
-	}
+    if (!file_exists($profile_picture)) {
+        $profile_picture = '../assets/images/account-circle.svg';
+    }
 }
 
 ?>
@@ -82,7 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
                 <!-- Mostrar la foto de perfil -->
                 <div id="fotoPerfil">
                     <h3>Foto de Perfil</h3>
-                    <img src="<?= htmlspecialchars($profile_picture) ?>" alt="Foto de Perfil" width="100" height="100">
+                    <img src="../<?= htmlspecialchars($profile_picture) ?>" alt="Foto de Perfil" width="100"
+                        height="100">
                 </div>
 
                 <div id="descripcion">
