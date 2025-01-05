@@ -238,18 +238,6 @@ button:hover {
 	transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-.error {
-	background-color: rgb(114, 5, 5);
-	color: #fff;
-	padding: 10px;
-	border-radius: 5px;
-	font-weight: bold;
-	margin: 10px 0;
-	border: 1px solid rgb(90, 3, 3);
-	font-size: 14px;
-	display: inline-block;
-}
-
 #expenses-list div:hover {
 	transform: translateY(-3px);
 	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.7);
@@ -267,7 +255,6 @@ button:hover {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto; 
-    padding: 20px;
     box-sizing: border-box;
     gap: 20px;
 }
@@ -302,26 +289,36 @@ button:hover {
     color: #8f8f8f;
 }
 
-.exito {
-	color: green;
-	background-color: #e0ffe0;
-	padding: 10px;
-	margin-bottom: 10px;
-	border: 1px solid green;
-	border-radius: 5px;
+
+
+.messages-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .error {
-	color: red;
-	background-color: #ffe0e0;
-	padding: 10px;
-	margin-bottom: 10px;
-	border: 1px solid red;
-	border-radius: 5px;
+    background-color: rgb(114, 5, 5);
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin: 10px;
+    border: 1px solid rgb(90, 3, 3);
+    font-size: 14px;
+    display: inline-block;
 }
 
-.messages-container {
-	margin: 20px 0;
+.exito {
+    color: green;
+    background-color: #e0ffe0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid green;
+    border-radius: 5px;
+    font-size: 14px;
+    display: inline-block;
 }
 
 /* Historial */
