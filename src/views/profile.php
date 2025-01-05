@@ -1,63 +1,46 @@
 <?php
-// Incluir clases y funciones necesarias
 include('../backend/functions.php');
-
-// Iniciar sesión
 session_start();
 
-// Obtener la información del usuario desde la base de datos
 $userId = $_SESSION['user_id'] ?? null;
 
 if ($userId) {
     $userData = UserManager::getUserData($userId);
 
-    // Asignar valores de la base de datos o predeterminados
     $user_name = $userData['nombre_usuario'] ?? 'Usuario';
     $description = $userData['descripcion'] ?? 'No tienes una descripción configurada.';
     $profile_picture = $userData['foto_perfil'] ?? '../assets/images/account-circle.svg';
 
-    // Verificar si el archivo existe físicamente
     if (!file_exists(__DIR__ . '/../' . $profile_picture)) {
         $profile_picture = '../assets/images/account-circle.svg';
     }
 } else {
-    // Valores predeterminados si no hay sesión
     $user_name = 'Usuario';
     $description = 'No tienes una descripción configurada.';
     $profile_picture = '../assets/images/account-circle.svg';
 }
 
-// Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
-    $messages = []; // Array para mensajes con clases
+    $messages = [];
     if (isset($_POST['user_name'])) {
-        $response = UserManager::updateUserName($userId, $_POST['user_name']);
-        $messages[] = $response;
+        $messages[] = UserManager::updateUserName($userId, $_POST['user_name']);
     }
-
     if (isset($_POST['description'])) {
-        $response = UserManager::updateDescription($userId, $_POST['description']);
-        $messages[] = $response;
+        $messages[] = UserManager::updateDescription($userId, $_POST['description']);
     }
-
     if (!empty($_FILES['profile_picture']['name'])) {
-        $response = UserManager::updateProfilePicture($userId, $_FILES['profile_picture']);
-        $messages[] = $response;
+        $messages[] = UserManager::updateProfilePicture($userId, $_FILES['profile_picture']);
     }
 
-    // Recargar los datos del usuario
     $userData = UserManager::getUserData($userId);
     $user_name = $userData['nombre_usuario'] ?? $user_name;
-    $description = $userData['descripcion'] ?: 'No tienes una descripción configurada.';
-    $profile_picture = '../' . $userData['foto_perfil'] ?? '../assets/images/account-circle.svg';
+    $description = $userData['descripcion'] ?? 'No tienes una descripción configurada.';
+    $profile_picture = $userData['foto_perfil'] ?? '../assets/images/account-circle.svg';
 
-    // var_dump($profile_picture);
-
-    if (!file_exists($profile_picture)) {
+    if (!file_exists(__DIR__ . '/../' . $profile_picture)) {
         $profile_picture = '../assets/images/account-circle.svg';
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -79,25 +62,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
     <main>
         <section class="profile-section">
             <div id="perfilContainer">
-                <!-- Mostrar la foto de perfil -->
                 <div id="fotoPerfil">
                     <h3>Foto de Perfil</h3>
+                    <?php if (file_exists(__DIR__ . '/../' . $profile_picture)): ?>
                     <img src="../<?= htmlspecialchars($profile_picture) ?>" alt="Foto de Perfil" width="100"
                         height="100">
+                    <?php else: ?>
+                    <img src="../assets/images/account-circle.svg" alt="Foto de Perfil Predeterminada" width="100"
+                        height="100">
+                    <?php endif; ?>
                 </div>
 
                 <div id="descripcion">
-                    <!-- Mostrar la descripción -->
                     <h3>Descripción:</h3>
                     <p><?= htmlspecialchars($description) ?></p>
                 </div>
             </div>
 
-            <?php if (!empty($message)): ?>
-            <div class="message"><?= $message ?></div>
+            <?php if (!empty($messages)): ?>
+            <div class="messages-container">
+                <?php foreach ($messages as $msg): ?>
+                <?php if ($msg !== null): ?>
+                <div class="<?= htmlspecialchars($msg['class']) ?>"><?= htmlspecialchars($msg['message']) ?></div>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
             <?php endif; ?>
 
-            <!-- Formulario para editar perfil -->
             <form method="POST" enctype="multipart/form-data">
                 <label for="user_name">Nombre:</label>
                 <input type="text" id="user_name" name="user_name" value="<?= htmlspecialchars($user_name) ?>" required>
@@ -110,18 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
 
                 <button type="submit">Guardar Cambios</button>
             </form>
-
-            <?php if (!empty($messages)): ?>
-            <div class="messages-container">
-                <?php foreach ($messages as $msg): ?>
-                <?php if ($msg !== null): ?>
-                <div class="<?= htmlspecialchars($msg['class']) ?>"><?= htmlspecialchars($msg['message']) ?></div>
-                <?php endif; ?>
-                <?php endforeach; ?>
-            </div>
-            <?php endif; ?>
-
-
         </section>
     </main>
 </body>
