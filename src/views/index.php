@@ -33,7 +33,7 @@ $user_name = $_SESSION['user_name'] ?? '';
                 <h2>Añadir Gasto</h2>
 
                 <label for="amount">Cantidad:</label>
-                <input type="number" id="amount" name="amount" step="any" min="0.01">
+                <input type="number" id="amount" name="amount" step="any">
 
                 <label for="category">Categoría:</label>
                 <select id="category">

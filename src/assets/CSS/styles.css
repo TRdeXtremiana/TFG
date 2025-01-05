@@ -298,6 +298,7 @@ button:hover {
     margin: 10px;
     font-size: 14px;
     display: inline-block;
+	max-width: 500px;
 }
 
 .exito {
@@ -310,6 +311,7 @@ button:hover {
     border-radius: 5px;
     font-size: 14px;
     display: inline-block;
+	max-width: 500px;
 }
 
 /* Historial */
