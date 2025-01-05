@@ -38,9 +38,14 @@ header nav {
 header a {
 	color: #8184f5;
 	text-decoration: none;
-	font-size: 1em;
 	font-weight: 600;
 	transition: color 0.3s ease, transform 0.2s ease;
+
+    --min: 16;
+    --max: 16;
+    --mintrans: 390;
+    --maxtrans: 1920;
+    font-size: clamp(var(--min) * 1px, calc((var(--max) - var(--min)) * ((100vw - var(--mintrans)* 1px) / (var(--maxtrans) - var(--mintrans))) + var(--min) * 1px), var(--max) * 1px) !important;
 }
 
 header a:hover, .active {
@@ -444,6 +449,22 @@ background-color: #121212;
     }
 }
 
+
+@media (max-width:999px) {
+    .historialContainer {
+        flex-direction: column;
+    }
+
+    .historialContainer .tabla-historial {
+        width: 100%;
+    }
+
+    .historialContainer .historial-total {
+        margin: auto;
+    }
+
+}
+
 @media (max-width: 768px) {    
     body {
         font-size: 13px; /
@@ -465,11 +486,11 @@ background-color: #121212;
     }
 
     header h1 {
-
+        width: 100%;;
         margin: 0;
     }
 
-    header nav {
+    header nav{
         display: flex;
         justify-content: space-evenly; 
         align-items: center;
@@ -479,8 +500,15 @@ background-color: #121212;
     
 
     header a {
-        font-size: 0.8em; 
+        width: 100%;
+        display: block;
+        text-align: center;
         padding: 0.5em 0;
+        font-size: 25px !important;
+    }
+
+    header nav a {
+        font-size: 0.85em !important;
     }
 
     /* Formularios */
@@ -521,6 +549,10 @@ background-color: #121212;
     .tabla-historial, .historial-categorias-tabla {
         overflow: hidden; 
         font-size: 0.75em; 
+    }
+
+    .historial-categorias-tabla{
+        font-size: large;
     }
 
     /* Historial */
