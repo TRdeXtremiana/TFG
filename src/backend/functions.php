@@ -95,13 +95,16 @@ class UserManager
 
     public static function updateProfilePicture($userId, $file)
     {
-        $targetDir = __DIR__ . '/../assets/images/profileImages/';
-        if (!file_exists($targetDir) && !mkdir($targetDir, 0777, true)) {
-            return ['message' => "Error: No se pudo crear el directorio de destino.", 'class' => 'error'];
+        $baseDir = __DIR__ . '/../assets/images/profileImages/';
+        $userDir = $baseDir . $userId . '/';
+
+        // Crear la carpeta del usuario si no existe
+        if (!file_exists($userDir) && !mkdir($userDir, 0777, true)) {
+            return ['message' => "Error: No se pudo crear el directorio del usuario.", 'class' => 'error'];
         }
 
         $fileName = basename($file['name']);
-        $targetFile = $targetDir . $fileName;
+        $targetFile = $userDir . $fileName;
 
         if ($file['error'] !== UPLOAD_ERR_OK) {
             return ['message' => "Error al subir el archivo: Código de error " . $file['error'], 'class' => 'error'];
@@ -113,16 +116,12 @@ class UserManager
             return ['message' => "Error: El archivo debe ser una imagen válida (JPEG, PNG, GIF).", 'class' => 'error'];
         }
 
-        $currentData = self::getUserData($userId);
-        $relativePath = 'assets/images/profileImages/' . $fileName;
-        if ($currentData && $currentData['foto_perfil'] === $relativePath) {
-            return ['message' => "La foto de perfil no ha cambiado.", 'class' => 'error'];
-        }
-
         if (!move_uploaded_file($file['tmp_name'], $targetFile)) {
-            return ['message' => "Error al mover el archivo a la carpeta de destino.", 'class' => 'error'];
+            return ['message' => "Error al mover el archivo a la carpeta del usuario.", 'class' => 'error'];
         }
 
+        // Guardar la ruta relativa en la base de datos
+        $relativePath = 'assets/images/profileImages/' . $userId . '/' . $fileName;
         $query = "UPDATE usuarios SET foto_perfil = :foto WHERE id_usuario = :id";
         $stmt = self::executeQuery($query, [
             ':foto' => $relativePath,
