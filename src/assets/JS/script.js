@@ -9,7 +9,7 @@ async function postData(url, data) {
 function showExpenseMessage(message, isSuccess) {
     const messageSpan = document.getElementById('expense-message');
     messageSpan.textContent = message;
-    messageSpan.className = isSuccess ? 'success' : 'error';
+    messageSpan.className = isSuccess ? 'exito' : 'error';
     messageSpan.classList.remove('hidden');
 
 }

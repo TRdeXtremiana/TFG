@@ -215,15 +215,6 @@ button:hover {
     font-weight: bold;
 }
 
-#expense-message.success {
-    color: green;
-}
-
-#expense-message.error {
-    color: rgb(0, 0, 0);
-}
-
-
 /* Listados */
 #expenses-list {
 	display: flex;
@@ -305,13 +296,13 @@ button:hover {
     border-radius: 5px;
     font-weight: bold;
     margin: 10px;
-    border: 1px solid rgb(90, 3, 3);
     font-size: 14px;
     display: inline-block;
 }
 
 .exito {
     color: green;
+	font-weight: bold;
     background-color: #e0ffe0;
     padding: 10px;
     margin-bottom: 10px;

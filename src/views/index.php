@@ -1,16 +1,13 @@
 <?php
-// Iniciar sesión
 session_start();
 
 require_once __DIR__ . '/../backend/models/Database.php';
 
-// Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
 }
 
-// Obtener el nombre de usuario desde la sesión
 $user_name = $_SESSION['user_name'] ?? '';
 ?>
 
@@ -36,7 +33,7 @@ $user_name = $_SESSION['user_name'] ?? '';
                 <h2>Añadir Gasto</h2>
 
                 <label for="amount">Cantidad:</label>
-                <input type="number" id="amount" name="amount" step="any" required min="0.01">
+                <input type="number" id="amount" name="amount" step="any" min="0.01">
 
                 <label for="category">Categoría:</label>
                 <select id="category">
@@ -53,7 +50,7 @@ $user_name = $_SESSION['user_name'] ?? '';
                 </select>
 
                 <label for="description">Descripción (Opcional):</label>
-                <input type="text" id="description" name="description">
+                <input type="text" id="description" name="description" placeholder="Descripción del gasto">
 
                 <label for="date">Fecha:</label>
                 <input type="date" id="date" name="date" required value="<?= date('Y-m-d') ?>">
@@ -62,7 +59,6 @@ $user_name = $_SESSION['user_name'] ?? '';
 
             </form>
 
-            <!-- Span para mensajes dinámicos -->
             <span id="expense-message" class="hidden"></span>
         </section>
 
