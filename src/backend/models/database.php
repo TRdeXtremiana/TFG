@@ -4,7 +4,7 @@
 if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
 if (!defined('DB_NAME')) define('DB_NAME', 'gestorgastos');
 if (!defined('DB_USER')) define('DB_USER', 'root');
-if (!defined('DB_PASS')) define('DB_PASS', ''); // Cambiar si la contraseña no es la predeterminada
+if (!defined('DB_PASS')) define('DB_PASS', '');
 
 /**
  * Clase para manejar la conexión a la base de datos utilizando PDO.
