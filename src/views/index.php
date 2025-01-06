@@ -53,7 +53,7 @@ $user_name = $_SESSION['user_name'] ?? '';
                 <input type="text" id="description" name="description" placeholder="Descripción del gasto">
 
                 <label for="date">Fecha:</label>
-                <input type="date" id="date" name="date" required value="<?= date('Y-m-d') ?>">
+                <input type="date" id="date" name="date" value="<?= date('Y-m-d') ?>">
 
                 <button type="submit" id="submit-button">Añadir <span id="spinner" class="hidden">⏳</span></button>
 

@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId) {
 
             <form method="POST" enctype="multipart/form-data">
                 <label for="user_name">Nombre:</label>
-                <input type="text" id="user_name" name="user_name" value="<?= htmlspecialchars($user_name) ?>" required>
+                <input type="text" id="user_name" name="user_name" value="<?= htmlspecialchars($user_name) ?>">
 
                 <label for="description">Descripción:</label>
                 <textarea id="description" name="description"><?= htmlspecialchars($description) ?></textarea>

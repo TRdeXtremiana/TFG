@@ -29,6 +29,19 @@ function isEmailRegistered($correo)
  */
 function registrarUsuario($nombre_usuario, $correo, $contrasena)
 {
+    // Validación de campos vacíos
+    if (empty($nombre_usuario)) {
+        return "El nombre de usuario no puede estar vacío.";
+    }
+
+    if (empty($correo)) {
+        return "El correo electrónico no puede estar vacío.";
+    }
+
+    if (empty($contrasena)) {
+        return "La contraseña no puede estar vacía.";
+    }
+
     $pdo = Database::connect();
 
     // Confirmar si el nombre de usuario ya está registrado

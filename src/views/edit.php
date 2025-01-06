@@ -63,7 +63,7 @@ if (!isset($_POST['id'])) {
                 <input type="text" id="description" name="description" value="<?= $expense['descripcion'] ?>">
 
                 <label for="date">Fecha:</label>
-                <input type="date" id="date" name="date" required value="<?= $expense['fecha_gasto'] ?>">
+                <input type="date" id="date" name="date" value="<?= $expense['fecha_gasto'] ?>">
 
                 <div class="form-buttons">
                     <button type="submit" id="edit-button">Editar <span id="spinner" class="hidden">⏳</span></button>
