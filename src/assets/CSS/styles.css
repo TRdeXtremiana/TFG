@@ -547,7 +547,6 @@ background-color: #121212;
     }
 
     .tabla-historial, .historial-categorias-tabla {
-        overflow: hidden; 
         font-size: 0.75em; 
     }
 
@@ -566,7 +565,6 @@ background-color: #121212;
 
 .historialContainer {
     display: block;
-    max-width: 100%;
 }
 
 .historial-tabla {
@@ -594,6 +592,14 @@ background-color: #121212;
 
 .dataTables_wrapper {
     margin: 0 auto;
+}
+
+tr{
+    display: table-row;
+}
+
+td{
+display: table-cell;
 }
 
 
@@ -624,6 +630,14 @@ background-color: #121212;
         text-align: center;
         font-size: 0.8em;
     }
+}
+
+@media (max-width: 450px) {    
+
+    #tablaGastos {
+        white-space: wrap; 
+    }
+
 }
 
 
