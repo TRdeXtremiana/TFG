@@ -1,19 +1,23 @@
 <?php
-session_start();
-require_once __DIR__ . '/../backend/models/Database.php';
+session_start(); // Comienza la sesión para manejar los datos del usuario
+require_once __DIR__ . '/../backend/models/Database.php'; // Incluye el archivo para conectar a la base de datos
 
+// Verifica si el usuario está autenticado, si no lo está, lo redirige a la página de inicio de sesión
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit();
+    header('Location: login.php'); // Redirige al usuario no autenticado
+    exit(); // Detiene la ejecución del código
 }
 
-// Inicializar $resultado
+// Variables que almacenarán los datos de los gastos y los totales por categoría
 $resultado = [];
 $totalesPorCategoria = [];
 
+// Si se envió un formulario con mes y año seleccionados, procesa la solicitud
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meses']) && isset($_POST['anios'])) {
     try {
-        $db = Database::connect();
+        $db = Database::connect(); // Conecta a la base de datos
+
+        // Consulta para obtener los gastos del usuario según el mes y año seleccionados
         $sql = 'SELECT g.id_gasto, g.cantidad, g.descripcion, g.fecha_gasto, e.nombre as categoria
                 FROM gastos g
                 JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
@@ -23,53 +27,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['meses']) && isset($_P
                 AND g.eliminado = 0
                 ORDER BY g.fecha_gasto DESC';
 
-        $stm = $db->prepare($sql);
+        $stm = $db->prepare($sql); // Prepara la consulta SQL
         $stm->execute([
-            ':id_usuario' => $_SESSION['user_id'],
-            ':mes' => $_POST['meses'],
-            ':anio' => $_POST['anios']
+            ':id_usuario' => $_SESSION['user_id'], // Pasa el ID del usuario autenticado
+            ':mes' => $_POST['meses'], // Pasa el mes seleccionado en el formulario
+            ':anio' => $_POST['anios'] // Pasa el año seleccionado en el formulario
         ]);
 
-        $resultado = $stm->fetchAll();
+        $resultado = $stm->fetchAll(); // Obtiene los datos de los gastos
 
+        // Consulta para obtener los totales por cada categoría de gasto
         $sqlTotalesPorCategoria = 'SELECT e.nombre as categoria, SUM(g.cantidad) as total_categoria
-        FROM gastos g
-        JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
-        WHERE g.id_usuario = :id_usuario
-        AND MONTH(g.fecha_gasto) = :mes
-        AND YEAR(g.fecha_gasto) = :anio
-        AND g.eliminado = 0
-        GROUP BY e.nombre
-        ORDER BY total_categoria DESC';
+                                   FROM gastos g
+                                   JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
+                                   WHERE g.id_usuario = :id_usuario
+                                   AND MONTH(g.fecha_gasto) = :mes
+                                   AND YEAR(g.fecha_gasto) = :anio
+                                   AND g.eliminado = 0
+                                   GROUP BY e.nombre
+                                   ORDER BY total_categoria DESC';
 
-
-        $stmTotales = $db->prepare($sqlTotalesPorCategoria);
+        $stmTotales = $db->prepare($sqlTotalesPorCategoria); // Prepara la consulta SQL
         $stmTotales->execute([
-            ':id_usuario' => $_SESSION['user_id'],
-            ':mes' => $_POST['meses'],
-            ':anio' => $_POST['anios']
+            ':id_usuario' => $_SESSION['user_id'], // Pasa el ID del usuario autenticado
+            ':mes' => $_POST['meses'], // Pasa el mes seleccionado en el formulario
+            ':anio' => $_POST['anios'] // Pasa el año seleccionado en el formulario
         ]);
 
-        $totalesPorCategoria = $stmTotales->fetchAll();
+        $totalesPorCategoria = $stmTotales->fetchAll(); // Obtiene los totales por categoría
     } catch (PDOException $e) {
-        error_log('Error en la consulta: ' . $e->getMessage());
+        error_log('Error en la consulta: ' . $e->getMessage()); // Registra errores en el archivo de log
     }
 }
 
+// Si hay parámetros de mes y año en la URL, realiza la consulta para mostrar los gastos correspondientes
+if (!empty($_GET['mes']) || !empty($_GET['anio'])) :
+    $db = Database::connect(); // Conecta a la base de datos
 
-if (!empty($_GET['mes']) || !empty($_GET['anio'])) : ?>
-
-
-<?php
-    $db = Database::connect();
+    // Consulta para obtener los gastos según los parámetros de la URL
     $sql = 'SELECT g.id_gasto, g.cantidad, g.descripcion, g.fecha_gasto, e.nombre as categoria
-                    FROM gastos g
-                    JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
-                    WHERE g.id_usuario = :id_usuario
-                    AND MONTH(g.fecha_gasto) = :mes
-                    AND YEAR(g.fecha_gasto) = :anio
-                    AND g.eliminado = 0
-                    ORDER BY g.fecha_gasto DESC';
+            FROM gastos g
+            JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
+            WHERE g.id_usuario = :id_usuario
+            AND MONTH(g.fecha_gasto) = :mes
+            AND YEAR(g.fecha_gasto) = :anio
+            AND g.eliminado = 0
+            ORDER BY g.fecha_gasto DESC';
 
     $stm = $db->prepare($sql);
     $stm->execute([
@@ -78,19 +81,18 @@ if (!empty($_GET['mes']) || !empty($_GET['anio'])) : ?>
         ':anio' => $_GET['anio']
     ]);
 
+    $resultado = $stm->fetchAll(); // Obtiene los gastos
 
-    $resultado = $stm->fetchAll();
-
+    // Consulta para obtener los totales por categoría basados en los parámetros de la URL
     $sqlTotalesPorCategoria = 'SELECT e.nombre as categoria, SUM(g.cantidad) as total_categoria
-        FROM gastos g
-        JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
-        WHERE g.id_usuario = :id_usuario
-        AND MONTH(g.fecha_gasto) = :mes
-        AND YEAR(g.fecha_gasto) = :anio
-        AND g.eliminado = 0
-        GROUP BY e.nombre
-        ORDER BY total_categoria DESC';
-
+                               FROM gastos g
+                               JOIN etiquetas e ON g.id_etiqueta = e.id_etiqueta
+                               WHERE g.id_usuario = :id_usuario
+                               AND MONTH(g.fecha_gasto) = :mes
+                               AND YEAR(g.fecha_gasto) = :anio
+                               AND g.eliminado = 0
+                               GROUP BY e.nombre
+                               ORDER BY total_categoria DESC';
 
     $stmTotales = $db->prepare($sqlTotalesPorCategoria);
     $stmTotales->execute([
@@ -99,10 +101,8 @@ if (!empty($_GET['mes']) || !empty($_GET['anio'])) : ?>
         ':anio' => $_GET['anio']
     ]);
 
-    $totalesPorCategoria = $stmTotales->fetchAll();
-
+    $totalesPorCategoria = $stmTotales->fetchAll(); // Obtiene los totales por categoría
 endif;
-
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +121,8 @@ endif;
 </head>
 
 <body>
-    <?php include 'header.php'; ?>
+    <?php include 'header.php'; // Incluir el encabezado de la página 
+    ?>
 
     <main class="historial">
         <?php if ((isset($_POST['meses']) && isset($_POST['anios'])) ||  (!empty($_GET['mes']) || !empty($_GET['anio']))) : ?>
@@ -198,6 +199,7 @@ endif;
             </div>
 
             <script>
+            // Inicializa el gráfico circular
             let etiquetas = <?= json_encode(array_column($totalesPorCategoria, 'categoria')) ?>;
             let totales = <?= json_encode(array_column($totalesPorCategoria, 'total_categoria')) ?>;
 
@@ -241,6 +243,7 @@ endif;
             </script>
 
             <script>
+            // Inicializa la tabla de datos
             let table = new DataTable('#tablaGastos', {
                 responsive: true,
                 pageLength: 10,

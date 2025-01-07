@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Comprobar si se ha enviado el ID del gasto
 if (!isset($_POST['id'])) {
     header('Location: index.php');
     exit();
